@@ -12,7 +12,7 @@ This file is EVEN MORE GENERAL than a top-level SConstruct file.
 
 This file is meant to establish settings that ALL CEDRUS 'SConstruct'
 FILES WILL USE... no matter whether it is the SuperLab-4 SConstruct,
-or the Licenser SConstruct, or some future thing like a SuperLab-5
+or the Licenser SConstruct, or some future thing like a SuperLab-8
 SConstruct.
 
 These are like 'company-wide' build flags. They should not assume too
