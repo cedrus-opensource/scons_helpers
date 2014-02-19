@@ -285,3 +285,4 @@ class CedrusQtSettingsWin32:
         return results
 
 
+
