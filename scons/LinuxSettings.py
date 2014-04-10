@@ -32,11 +32,17 @@ class LinuxSettings:
         ]
 
     def getCommonCxxFlags(self):
+        """
+        Note: prior to upgrading from Ubuntu 10 (lucid) to Ubuntu 13 (saucy),
+        we used to put '/usr/include' and '/usr/local/include' on the path here.
+        For some reason, in Ubuntu 13 that *royally* screws up the build. It seems to
+        be related to the fact that GCC is prepared to build for either 32-bit or 64-bit apps,
+        and GCC itself needs to choose paths based on which bit-ed-ness is happening.
+        So by us trying to *explicitly* mention system paths, it makes things BAD.
+        """
         return UnixCompilerFlags.unix_common_cxxflags + [
-            #'-isystem/usr/include',
-            #'-isystem/usr/local/include',  # gmock and gtest are in /usr/local/, whereas boost and wx are NOT (boost and wx are in just '/usr')
+            #'-isystem/usr/include', # see note above
             '-isystem/usr/include/mysql',
-            #'-isysroot/usr/include',
             '-fno-strict-aliasing',
         ]
 

@@ -465,13 +465,12 @@ class CedrusWxWidgetsLinux:
         if debug:
             cxxflags = [
                 '-isystem/usr/include/wx-'+env['WX_VERSION']+'/',
-                '-isystem/usr/lib/x86_64-linux-gnu/wx/include/base-unicode-release-2.8/',# /usr/lib/wx/include/gtk2-unicode-debug-'+env['WX_VERSION']+'/',
+                '-isystem/usr/lib/x86_64-linux-gnu/wx/include/base-unicode-release-'+env['WX_VERSION']+'/',
                 ]
         else:
             cxxflags = [
                 '-isystem/usr/include/wx-'+env['WX_VERSION']+'/',
-                '-isystem/usr/lib/x86_64-linux-gnu/wx/include/base-unicode-release-2.8/',# /usr/lib/wx/include/gtk2-unicode-debug-'+env['WX_VERSION']+'/',
-                #'-isystem/usr/lib/wx/include/gtk2-unicode-release-'+env['WX_VERSION']+'/',
+                '-isystem/usr/lib/x86_64-linux-gnu/wx/include/base-unicode-release-'+env['WX_VERSION']+'/',
                 ]
 
         lib_path = [
@@ -487,7 +486,7 @@ class CedrusWxWidgetsLinux:
 
     def need_core(self, env):
         if self.debug:
-            libname = 'wx_gtk2u_core-'+env['WX_VERSION']
+            libname = 'wx_gtk2ud_core-'+env['WX_VERSION']
         else:
             libname = 'wx_gtk2u_core-'+env['WX_VERSION']
 
@@ -497,7 +496,7 @@ class CedrusWxWidgetsLinux:
 
     def need_net(self, env):
         if self.debug:
-            libname = 'wx_baseu_net-'+env['WX_VERSION']
+            libname = 'wx_baseud_net-'+env['WX_VERSION']
         else:
             libname = 'wx_baseu_net-'+env['WX_VERSION']
 
@@ -507,7 +506,7 @@ class CedrusWxWidgetsLinux:
 
     def need_xml(self, env):
         if self.debug:
-            libname = 'wx_baseu_xml-'+env['WX_VERSION']
+            libname = 'wx_baseud_xml-'+env['WX_VERSION']
         else:
             libname = 'wx_baseu_xml-'+env['WX_VERSION']
 
@@ -517,7 +516,7 @@ class CedrusWxWidgetsLinux:
 
     def need_adv(self, env):
         if self.debug:
-            libname = 'wx_gtk2u_adv-'+env['WX_VERSION']
+            libname = 'wx_gtk2ud_adv-'+env['WX_VERSION']
         else:
             libname = 'wx_gtk2u_adv-'+env['WX_VERSION']
 
@@ -526,7 +525,7 @@ class CedrusWxWidgetsLinux:
 
     def need_aui(self, env):
         if self.debug:
-            libname = 'wx_gtk2u_aui-'+env['WX_VERSION']
+            libname = 'wx_gtk2ud_aui-'+env['WX_VERSION']
         else:
             libname = 'wx_gtk2u_aui-'+env['WX_VERSION']
 
@@ -535,7 +534,7 @@ class CedrusWxWidgetsLinux:
 
     def need_html(self, env):
         if self.debug:
-            libname = 'wx_gtk2u_html-'+env['WX_VERSION']
+            libname = 'wx_gtk2ud_html-'+env['WX_VERSION']
         else:
             libname = 'wx_gtk2u_html-'+env['WX_VERSION']
 
@@ -544,7 +543,7 @@ class CedrusWxWidgetsLinux:
 
     def need_qa(self, env):
         if self.debug:
-            libname = 'wx_gtk2u_qa-'+env['WX_VERSION']
+            libname = 'wx_gtk2ud_qa-'+env['WX_VERSION']
         else:
             libname = 'wx_gtk2u_qa-'+env['WX_VERSION']
 
