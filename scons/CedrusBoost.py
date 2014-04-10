@@ -310,7 +310,7 @@ class CedrusBoostSettingsLinux:
     def __init__(self, env):
 
         cxxflags = [
-			'-isystem/usr/include/boost-'+env['BOOST_VERSION']+'/',
+			'-isystem/usr/include/boost',#-'+env['BOOST_VERSION']+'/',
             ]
 
         lib_path = [
@@ -324,43 +324,40 @@ class CedrusBoostSettingsLinux:
         return []
 
     def need_boost_system(self, env):
-        libname = 'boost_system-gcc43-mt-'+env['BOOST_VERSION']
+        libname = 'boost_system' #-gcc43-mt-'+env['BOOST_VERSION']
         env.AppendUnique( LIBS= [libname] )
 
-    def need_boost_chrono(self, env):
-        libname = 'boost_chrono-gcc43-mt-'+env['BOOST_VERSION']
-        env.AppendUnique( LIBS= [libname] )
 
     def need_boost_serialization(self, env):
-        libname1 = 'boost_serialization-gcc43-mt-'+env['BOOST_VERSION']
-        libname2 = 'boost_wserialization-gcc43-mt-'+env['BOOST_VERSION']
+        libname1 = 'boost_serialization' #-gcc43-mt-'+env['BOOST_VERSION']
+        libname2 = 'boost_wserialization' #-gcc43-mt-'+env['BOOST_VERSION']
         env.AppendUnique( LIBS= [libname1, libname2] )
 
 
     def need_boost_thread(self, env):
-        libname = 'boost_thread-gcc43-mt-'+env['BOOST_VERSION']
+        libname = 'boost_thread' #-gcc43-mt-'+env['BOOST_VERSION']
         env.AppendUnique( LIBS= [libname] )
 
 
     def need_boost_date_time(self, env):
-        libname = 'boost_date_time-gcc43-mt-'+env['BOOST_VERSION']
+        libname = 'boost_date_time' #-gcc43-mt-'+env['BOOST_VERSION']
         env.AppendUnique( LIBS = [libname] )
 
 
     def need_boost_filesystem(self, env):
-        libname = 'boost_filesystem-gcc43-mt-'+env['BOOST_VERSION']
+        libname = 'boost_filesystem' #-gcc43-mt-'+env['BOOST_VERSION']
         env.AppendUnique( LIBS = [libname] )
 
     def need_boost_python(self, env):
-        libname = 'boost_python-gcc43-mt-'+env['BOOST_VERSION']
+        libname = 'boost_python' #-gcc43-mt-'+env['BOOST_VERSION']
         env.AppendUnique( LIBS = [libname] )
 
     def need_boost_regex(self, env):
-        libname = 'boost_regex-gcc43-mt-'+env['BOOST_VERSION']
+        libname = 'boost_regex' #-gcc43-mt-'+env['BOOST_VERSION']
         env.AppendUnique( LIBS = [libname] )
 
     def need_boost_signals(self, env):
-        libname = 'boost_signals-gcc43-mt-'+env['BOOST_VERSION']
+        libname = 'boost_signals' #-gcc43-mt-'+env['BOOST_VERSION']
         env.AppendUnique( LIBS = [libname] )
 
     def need_boost_math(self, env):

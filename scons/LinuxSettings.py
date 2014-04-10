@@ -33,10 +33,10 @@ class LinuxSettings:
 
     def getCommonCxxFlags(self):
         return UnixCompilerFlags.unix_common_cxxflags + [
-            '-isystem/usr/include',
-            '-isystem/usr/local/include',  # gmock and gtest are in /usr/local/, whereas boost and wx are NOT (boost and wx are in just '/usr')
+            #'-isystem/usr/include',
+            #'-isystem/usr/local/include',  # gmock and gtest are in /usr/local/, whereas boost and wx are NOT (boost and wx are in just '/usr')
             '-isystem/usr/include/mysql',
-            '-isysroot/usr/include',
+            #'-isysroot/usr/include',
             '-fno-strict-aliasing',
         ]
 
