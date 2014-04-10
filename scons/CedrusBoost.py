@@ -327,6 +327,9 @@ class CedrusBoostSettingsLinux:
         libname = 'boost_system' #-gcc43-mt-'+env['BOOST_VERSION']
         env.AppendUnique( LIBS= [libname] )
 
+    def need_boost_chrono(self, env):
+        libname = 'boost_chrono-gcc43-mt-'+env['BOOST_VERSION']
+        env.AppendUnique( LIBS= [libname] )
 
     def need_boost_serialization(self, env):
         libname1 = 'boost_serialization' #-gcc43-mt-'+env['BOOST_VERSION']
