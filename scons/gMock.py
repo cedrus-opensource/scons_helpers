@@ -67,8 +67,13 @@ def publish_all_libs_to_staging(env):
     return results
 
 def need_gmock_linux(env):
-    linked_libs = [ 'gmock', 'gtest', 'pthread' ]
+    linked_libs = [ 'gtest', 'pthread' ]
+
+    lib_path = [ '/usr/src/gtest' ]
 
     env.AppendUnique( LIBS = linked_libs,
+                      LIBPATH = lib_path,
                 )
+
+
 
