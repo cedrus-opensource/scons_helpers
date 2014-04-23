@@ -75,6 +75,10 @@ class CedrusWxWidgetsMac:
             self.mac_str = 'osx_cocoau'
             self.carb_coco_str = 'baseu'
 
+        self.wx_version_num = wxVersion
+        self._always_need_base(env)
+        self._proceed_with_include_paths(env)
+
 
     def _proceed_with_include_paths(self, env):
         # set cxxflags for wxWidgets
