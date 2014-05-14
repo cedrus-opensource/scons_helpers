@@ -12,7 +12,7 @@ def need_gmock(env):
     elif sys.platform == 'linux2':
         need_gmock_linux(env)
     else:
-        raise ValueError('Unknown Operating System')
+        raise ValueError('Unknown OS')
 
 def need_gmock_windows(env):
     # no need to publish. Statically linked
