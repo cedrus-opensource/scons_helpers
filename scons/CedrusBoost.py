@@ -168,7 +168,16 @@ class CedrusBoostSettingsWindowsRelease:
                     LIBPATH = lib_path )
 
     def publish_all_libs_to_staging(self, env):
-        boost_libs = env.Glob( os.getenv('BOOST_ROOT','')+'/lib/*'  + env['BOOST_VERSION'] + '*.dll' )
+
+        #boost_libs = env.Glob( os.getenv('BOOST_ROOT','')+'/lib/*'  + env['BOOST_VERSION'] + '*.dll' )
+
+        boost_libs = env.Glob( os.getenv('BOOST_ROOT','')+'/lib/*thread*'  + env['BOOST_VERSION'] + '*.dll' )
+        boost_libs += env.Glob( os.getenv('BOOST_ROOT','')+'/lib/*system*'  + env['BOOST_VERSION'] + '*.dll' )
+        boost_libs += env.Glob( os.getenv('BOOST_ROOT','')+'/lib/*regex*'  + env['BOOST_VERSION'] + '*.dll' )
+        boost_libs += env.Glob( os.getenv('BOOST_ROOT','')+'/lib/*filesystem*'  + env['BOOST_VERSION'] + '*.dll' )
+        boost_libs += env.Glob( os.getenv('BOOST_ROOT','')+'/lib/*date*time*'  + env['BOOST_VERSION'] + '*.dll' )
+        boost_libs += env.Glob( os.getenv('BOOST_ROOT','')+'/lib/*chrono*'  + env['BOOST_VERSION'] + '*.dll' )
+        boost_libs += env.Glob( os.getenv('BOOST_ROOT','')+'/lib/*serializa*'  + env['BOOST_VERSION'] + '*.dll' )
 
         results = []
 
@@ -245,7 +254,17 @@ class CedrusBoostSettingsWindowsDebug:
                     LIBPATH = lib_path )
 
     def publish_all_libs_to_staging(self, env):
-        boost_libs = env.Glob( os.getenv('BOOST_ROOT','')+'/lib/*'  + env['BOOST_VERSION'] + '*.dll' )
+
+        #boost_libs = env.Glob( os.getenv('BOOST_ROOT','')+'/lib/*'  + env['BOOST_VERSION'] + '*.dll' )
+
+        boost_libs = env.Glob( os.getenv('BOOST_ROOT','')+'/lib/*thread*'  + env['BOOST_VERSION'] + '*.dll' )
+        boost_libs += env.Glob( os.getenv('BOOST_ROOT','')+'/lib/*system*'  + env['BOOST_VERSION'] + '*.dll' )
+        boost_libs += env.Glob( os.getenv('BOOST_ROOT','')+'/lib/*regex*'  + env['BOOST_VERSION'] + '*.dll' )
+        boost_libs += env.Glob( os.getenv('BOOST_ROOT','')+'/lib/*filesystem*'  + env['BOOST_VERSION'] + '*.dll' )
+        boost_libs += env.Glob( os.getenv('BOOST_ROOT','')+'/lib/*date*time*'  + env['BOOST_VERSION'] + '*.dll' )
+        boost_libs += env.Glob( os.getenv('BOOST_ROOT','')+'/lib/*chrono*'  + env['BOOST_VERSION'] + '*.dll' )
+        boost_libs += env.Glob( os.getenv('BOOST_ROOT','')+'/lib/*serializa*'  + env['BOOST_VERSION'] + '*.dll' )
+
 
         results = []
 
