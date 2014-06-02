@@ -75,7 +75,8 @@ class CedrusQtSettingsMac:
             ]
 
         env.AppendUnique( CXXFLAGS = cxxflags,
-                          LIBPATH = lib_path, )
+                          LIBPATH = lib_path,
+                          CPPDEFINES = ['QT_NO_KEYWORDS'] )
 
     def add_library(self, env, library, num_suffix = '.5.1.1' ):
 
@@ -198,7 +199,8 @@ class CedrusQtSettingsWin32:
             ]
 
         env.AppendUnique( CXXFLAGS = cxxflags,
-                          LIBPATH = lib_path, )
+                          LIBPATH = lib_path,
+                          CPPDEFINES = ['QT_NO_KEYWORDS'] )
 
     def add_library(self, env, library, num_suffix = '' ):
 
