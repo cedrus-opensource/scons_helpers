@@ -67,7 +67,7 @@ def NowIsDuringBusinessHoursWhenSomeoneCanReactToSomeHungTest():
     if time.localtime().tm_wday < 5:
         is_business_day = True
 
-    if time.localtime().tm_hour >= 9 and time.localtime().tm_hour < 17:
+    if time.localtime().tm_hour >= 7 and time.localtime().tm_hour < 19:
         during_work_hours = True
 
     result = (is_business_day and during_work_hours)
