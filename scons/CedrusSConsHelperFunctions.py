@@ -507,7 +507,8 @@ def DeclareSConsProgramWithRunnableGoogleTests(
     frameworks,
     libs,
     libpath,
-    linkflags
+    linkflags,
+    skip_test_execution = False
 ):
     cpppath.append( str( os.getenv('GMOCK','')+'/include' ) )
     cpppath.append( str( os.getenv('GTEST','')+'/include' ) )
@@ -531,27 +532,29 @@ def DeclareSConsProgramWithRunnableGoogleTests(
         linkflags
         )
 
-    test_results = env.subst('$STAGING_DIR/../tests/') + project_target_name + '.xml'
+    if False == skip_test_execution:
 
-    command_line_string = ''
+        test_results = env.subst('$STAGING_DIR/../tests/') + project_target_name + '.xml'
 
-    if sys.platform == 'linux2':
-        # this assumes that the test executable was installed to STAGING !!
-        command_line_string += ' export LD_LIBRARY_PATH=' + env.subst('$STAGING_DIR') + '; '
+        command_line_string = ''
 
-    command_line_string += ' "' + str(installed_executable[0].abspath) + '"' + ' --gtest_output=xml:' + '"' + test_results + '"'
-    #print command_line_string
+        if sys.platform == 'linux2':
+            # this assumes that the test executable was installed to STAGING !!
+            command_line_string += ' export LD_LIBRARY_PATH=' + env.subst('$STAGING_DIR') + '; '
 
-    run_the_test = env.Command(
-        test_results,  # the target
-        installed_executable,
-        command_line_string
-        )
+        command_line_string += ' "' + str(installed_executable[0].abspath) + '"' + ' --gtest_output=xml:' + '"' + test_results + '"'
+        #print command_line_string
 
-    # this next Alias line makes it so that running (for example)
-    # "./build.sh TestLSCommon" will go ahead and *run* the test
-    # executable after it gets built
-    env.Alias( str(project_target_name), run_the_test )
+        run_the_test = env.Command(
+            test_results,  # the target
+            installed_executable,
+            command_line_string
+            )
+
+        # this next Alias line makes it so that running (for example)
+        # "./build.sh TestLSCommon" will go ahead and *run* the test
+        # executable after it gets built
+        env.Alias( str(project_target_name), run_the_test )
 
     return installed_executable
 
