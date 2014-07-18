@@ -55,28 +55,19 @@ private:
 
 
 
-#ifdef __APPLE__
 
 int main(int argc, char *argv[])
 {
     // the following MUST BE DONE *prior* to the 'addLibraryPath':
     QCoreApplication::setOrganizationName("Cedrus"); // this ENABLES cedrus-specific code INSIDE the Qt libraries! crucial!
 
+#ifdef __APPLE__
+
     std::string app_bundle = Cedrus::GetMacAppBundlePath();
 
     const QString bundle_path = QString::fromUtf8( app_bundle.c_str(), app_bundle.size() );//  [string UTF8String]);
     QCoreApplication::addLibraryPath( bundle_path );
 
-#elif defined(_WIN32)
-
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
-{
-    QCoreApplication::setOrganizationName("Cedrus"); // this ENABLES cedrus-specific code INSIDE the Qt libraries! crucial!
-
-    char wargv[10];
-    char * pargv = wargv;
-    char ** argv = &pargv;
-    int argc = 0;
 #endif //#ifdef __APPLE__
 
     testing::InitGoogleTest(&argc, argv);
