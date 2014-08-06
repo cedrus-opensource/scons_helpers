@@ -10,15 +10,17 @@
 #include "MacCocoaQtHelpers.h"
 #import <AppKit/NSApplication.h>
 #import <Foundation/NSBundle.h>
+#import <Foundation/NSAutoreleasePool.h>
 #import <Foundation/NSURL.h>
 
 std::string Cedrus::GetMacAppBundlePath()
 {
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     NSURL* url=[[NSBundle mainBundle] bundleURL];
 
     std::string result( [url.path UTF8String] );
 
-    [url release];
+    [pool release];
 
     return result;
 }
