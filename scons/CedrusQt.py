@@ -78,6 +78,10 @@ class CedrusQtSettingsMac:
                           LIBPATH = lib_path,
                           CPPDEFINES = ['QT_NO_KEYWORDS'] )
 
+        if env['BUILD_TYPE'] == 'opt':
+            env.AppendUnique( CPPDEFINES = ['QT_NO_DEBUG_OUTPUT'] )
+
+
     def add_library(self, env, library, num_suffix = '.5.1.1' ):
 
         self._use_qt_include_paths(env)
@@ -201,6 +205,10 @@ class CedrusQtSettingsWin32:
         env.AppendUnique( CXXFLAGS = cxxflags,
                           LIBPATH = lib_path,
                           CPPDEFINES = ['QT_NO_KEYWORDS'] )
+
+        if env['BUILD_TYPE'] == 'opt':
+            env.AppendUnique( CPPDEFINES = ['QT_NO_DEBUG_OUTPUT'] )
+
 
     def add_library(self, env, library, num_suffix = '' ):
 
