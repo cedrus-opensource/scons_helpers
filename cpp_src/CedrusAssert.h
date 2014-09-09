@@ -16,6 +16,9 @@
 
 #include <signal.h> // for raise
 
+#if defined(__APPLE__)
+#    include <CoreFoundation/CoreFoundation.h>
+#endif // defined(__APPLE__)
 
 namespace Cedrus
 {
@@ -31,17 +34,83 @@ namespace Cedrus
         #endif // Win/Unix
     }
 
+    void OptionToContinue
+    (
+     const char* title,
+     const char* message,
+     const char* filename,
+     const int line,
+     const char* funcname
+    )
+    {
+        #if defined(__APPLE__)
+
+        std::cerr << title << ":\n";
+        std::cerr << funcname << "\n";
+        std::cerr << filename << ":" << line << "\n";
+        std::cerr << message << "\n";
+
+        CFStringRef headerRef =  CFStringCreateWithCString( NULL, title,    kCFStringEncodingUTF8 );
+        CFStringRef messageRef = CFStringCreateWithCString( NULL, message,  kCFStringEncodingUTF8 );
+
+        CFStringRef button1 =    CFStringCreateWithCString( NULL, "Break",  kCFStringEncodingUTF8 ); // defaultButtonTitle
+        CFStringRef button2 =    CFStringCreateWithCString( NULL, "Continue", kCFStringEncodingUTF8 ); // alternateButtonTitle
+
+        CFOptionFlags response;
+
+        CFUserNotificationDisplayAlert
+            ( 0, // timeout. (apparently in seconds) The amount of time to wait for the user to dismiss
+                 // the notification dialog before the dialog dismisses
+                 // itself. Pass 0 to have the dialog never time out.
+              kCFUserNotificationCautionAlertLevel,
+              NULL, // iconURL
+              NULL, // soundURL
+              NULL, // localizationURL
+              headerRef,
+              messageRef,
+              button1, // defaultButtonTitle
+              button2, // alternateButtonTitle
+              NULL, // otherButtonTitle
+              &response);
+
+        CFRelease(headerRef);
+        CFRelease(messageRef);
+        CFRelease(button1);
+        CFRelease(button2);
+
+        if ( response == kCFUserNotificationDefaultResponse )
+        {
+            // choice was "Break"
+            TrapDebug();
+        }
+        else if ( response == kCFUserNotificationAlternateResponse )
+        {
+            // choice was "Continue"
+            // do nothing
+        }
+        else // if you add a 3rd button, this would be kCFUserNotificationOtherResponse
+        {
+            // either the notification timed out by itself (no user interaction),
+            // or else the user hit the ESCAPE key
+
+            std::cerr << "ignoring opportunity to debug the FAIL (either due to inaction or ESC key)\n";
+        }
+
+        #endif // #if defined(__APPLE__)
+    }
+
     void Ced_Asrt_Mac
     ( const char* message,
       const char* filename,
       const int line,
       const char* funcname )
     {
-        std::cerr << "CEDRUS_ASSERT:\n";
-        std::cerr << funcname << "\n";
-        std::cerr << filename << ":" << line << "\n";
-        std::cerr << message << "\n";
-        TrapDebug();
+        OptionToContinue
+            ( "CEDRUS_ASSERT",
+              message,
+              filename,
+              line,
+              funcname );
     }
 
     void Ced_Fail_Mac
@@ -50,11 +119,12 @@ namespace Cedrus
       const int line,
       const char* funcname )
     {
-        std::cerr << "CEDRUS_FAIL:\n";
-        std::cerr << funcname << "\n";
-        std::cerr << filename << ":" << line << "\n";
-        std::cerr << message << "\n";
-        TrapDebug();
+        OptionToContinue
+            ( "CEDRUS_FAIL",
+              message,
+              filename,
+              line,
+              funcname );
     }
 
 }
