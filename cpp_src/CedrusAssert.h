@@ -23,7 +23,7 @@
 namespace Cedrus
 {
     // break into the debugger
-    void TrapDebug()
+    inline void TrapDebug()
     {
         #if defined(_WIN32)
             DebugBreak();
@@ -34,7 +34,7 @@ namespace Cedrus
         #endif // Win/Unix
     }
 
-    void OptionToContinue
+    inline void OptionToContinue
     (
      const char* title,
      const char* message,
@@ -99,7 +99,7 @@ namespace Cedrus
         #endif // #if defined(__APPLE__)
     }
 
-    void Ced_Asrt_Mac
+    inline void Ced_Asrt_Mac
     ( const char* message,
       const char* filename,
       const int line,
@@ -113,7 +113,7 @@ namespace Cedrus
               funcname );
     }
 
-    void Ced_Fail_Mac
+    inline void Ced_Fail_Mac
     ( const char* message,
       const char* filename,
       const int line,
