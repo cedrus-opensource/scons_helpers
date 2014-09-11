@@ -31,7 +31,7 @@ namespace Cedrus
             raise(SIGTRAP);
         #else
             // TODO
-        #endif // Win/Unix
+        #endif // Win/Apple
     }
 
     inline void OptionToContinue
@@ -43,7 +43,16 @@ namespace Cedrus
      const char* funcname
     )
     {
-        #if defined(__APPLE__)
+        #if defined(_WIN32)
+
+        // suppress warnings about unused parameters on win32:
+        (void) title;
+        (void) message;
+        (void) filename;
+        (void) line;
+        (void) funcname;
+
+        #elif defined(__APPLE__)
 
         std::cerr << title << ":\n";
         std::cerr << funcname << "\n";
@@ -95,8 +104,9 @@ namespace Cedrus
 
             std::cerr << "ignoring opportunity to debug the FAIL (either due to inaction or ESC key)\n";
         }
-
-        #endif // #if defined(__APPLE__)
+        #else
+            // TODO
+        #endif // Win/Apple
     }
 
     inline void Ced_Asrt_Mac
@@ -189,7 +199,7 @@ namespace Cedrus
 
 #else
         // TODO
-#endif // Win/Unix
+#endif // Win/Apple
 
 
 #endif // #ifdef CEDRUS_DISABLE_ASSERT
