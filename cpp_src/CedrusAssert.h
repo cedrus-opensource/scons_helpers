@@ -14,6 +14,7 @@
 #    include <cassert>
 #endif
 
+#include <iostream> // for std::cerr
 #include <signal.h> // for raise
 
 #if defined(_WIN32)
