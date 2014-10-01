@@ -16,6 +16,10 @@
 
 #include <signal.h> // for raise
 
+#if defined(_WIN32)
+#    include <Windows.h>
+#endif // #if defined(_WIN32)
+
 #if defined(__APPLE__)
 #    include <CoreFoundation/CoreFoundation.h>
 #endif // defined(__APPLE__)
