@@ -16,6 +16,7 @@
 
 #include <iostream> // for std::cerr
 #include <signal.h> // for raise
+#include <stdlib.h> // for getenv
 
 #if defined(_WIN32)
 #    include <Windows.h>
@@ -120,6 +121,11 @@ namespace Cedrus
       const int line,
       const char* funcname )
     {
+        if ( getenv("CEDRUS_SUPALL_ASRT") )
+        {
+            return; // BAILING OUT!!  BAILING OUT!!  BAILING OUT!!  BAILING OUT!!  BAILING OUT!!  BAILING OUT!!  BAILING OUT!!
+        }
+
         OptionToContinue
             ( "CEDRUS_ASSERT",
               message,
@@ -134,12 +140,31 @@ namespace Cedrus
       const int line,
       const char* funcname )
     {
+        if ( getenv("CEDRUS_SUPALL_ASRT") )
+        {
+            return; // BAILING OUT!!  BAILING OUT!!  BAILING OUT!!  BAILING OUT!!  BAILING OUT!!  BAILING OUT!!  BAILING OUT!!
+        }
+
         OptionToContinue
             ( "CEDRUS_FAIL",
               message,
               filename,
               line,
               funcname );
+    }
+
+    inline void Suppress_All_Assertions()
+    {
+        char setting[] = "CEDRUS_SUPALL_ASRT=1";
+        // should return 0 for SUCCESS:
+        /*const int ret =*/ putenv( setting );
+    }
+
+    inline void UnSuppress_All_Assertions()
+    {
+        char negation[] = "CEDRUS_SUPALL_ASRT=";
+        // should return 0 for SUCCESS:
+        /*const int ret =*/ putenv( negation );
     }
 
 }
@@ -174,6 +199,10 @@ namespace Cedrus
 
 #        define CEDRUS_FAIL(msg)
 
+#        define CEDRUS_SUPPRESS_ALL_ASSERTIONS()
+
+#        define CEDRUS_UNSUPPRESS_ALL_ASSERTIONS()
+
 
 #else // the ELSE is when we _ENABLE_ our assertions
 
@@ -181,11 +210,15 @@ namespace Cedrus
 
          // when assertions are enabled on Win:
 #        define CEDRUS_ASSERT(cond, msg)         \
-            assert( ( cond ) && ( msg ) )
+             do { if ( ! getenv("CEDRUS_SUPALL_ASRT") ) assert( ( cond ) && ( msg ) );  } while ( 0 )
 
          // when assertions are enabled on Win:
 #        define CEDRUS_FAIL(msg)                 \
-            assert( ! msg )
+             do { if ( ! getenv("CEDRUS_SUPALL_ASRT") ) assert( ! msg );  } while ( 0 )
+
+#        define CEDRUS_SUPPRESS_ALL_ASSERTIONS()   Cedrus::Suppress_All_Assertions()
+
+#        define CEDRUS_UNSUPPRESS_ALL_ASSERTIONS() Cedrus::UnSuppress_All_Assertions()
 
 #    elif defined(__APPLE__)
 
@@ -201,6 +234,9 @@ namespace Cedrus
 #        define CEDRUS_FAIL(msg)                 \
             Cedrus::Ced_Fail_Mac( msg, __FILE__, __LINE__,  __func__ )
 
+#        define CEDRUS_SUPPRESS_ALL_ASSERTIONS()   Cedrus::Suppress_All_Assertions()
+
+#        define CEDRUS_UNSUPPRESS_ALL_ASSERTIONS() Cedrus::UnSuppress_All_Assertions()
 
 #else
         // TODO
