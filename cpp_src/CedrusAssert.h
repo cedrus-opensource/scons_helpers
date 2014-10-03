@@ -221,11 +221,17 @@ namespace Cedrus
 
          // when assertions are enabled on Win:
 #        define CEDRUS_ASSERT(cond, msg)         \
-             do { if ( ! getenv("CEDRUS_SUPALL_ASRT") ) assert( ( cond ) && ( msg ) );  } while ( 0 )
+             __pragma(warning(push))         \
+             __pragma(warning(disable:4127)) \
+             do { if ( ! getenv("CEDRUS_SUPALL_ASRT") ) assert( ( cond ) && ( msg ) );  } while ( 0 ) \
+             __pragma(warning(pop))
 
          // when assertions are enabled on Win:
 #        define CEDRUS_FAIL(msg)                 \
-             do { if ( ! getenv("CEDRUS_SUPALL_ASRT") ) assert( ! msg );  } while ( 0 )
+             __pragma(warning(push))         \
+             __pragma(warning(disable:4127)) \
+             do { if ( ! getenv("CEDRUS_SUPALL_ASRT") ) assert( ! msg );  } while ( 0 ) \
+             __pragma(warning(pop))
 
 #    elif defined(__APPLE__)
 
