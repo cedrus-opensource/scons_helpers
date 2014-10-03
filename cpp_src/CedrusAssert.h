@@ -24,6 +24,7 @@
 
 #if defined(__APPLE__)
 #    include <CoreFoundation/CoreFoundation.h>
+#    define _putenv putenv
 #endif // defined(__APPLE__)
 
 namespace Cedrus
@@ -160,7 +161,7 @@ namespace Cedrus
 
         static const char* setting = "CEDRUS_SUPALL_ASRT=1";
         // should return 0 for SUCCESS:
-        /*const int ret =*/ putenv( (char*) setting );
+        /*const int ret =*/ _putenv( (char*) setting );
 
     #endif // CEDRUS_DISABLE_ASSERT
     }
@@ -172,7 +173,7 @@ namespace Cedrus
 
         static const char* negation = "CEDRUS_SUPALL_ASRT=";
         // should return 0 for SUCCESS:
-        /*const int ret =*/ putenv( (char*) negation ); // on win32, this is enough to nullify the var.
+        /*const int ret =*/ _putenv( (char*) negation ); // on win32, this is enough to nullify the var.
 
         #if ! defined(_WIN32)
         /*const int ret =*/ unsetenv( "CEDRUS_SUPALL_ASRT" );// on posix, the above set it to "", and HERE we nullify it
