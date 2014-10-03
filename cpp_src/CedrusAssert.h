@@ -155,16 +155,30 @@ namespace Cedrus
 
     inline void Suppress_All_Assertions()
     {
-        char setting[] = "CEDRUS_SUPALL_ASRT=1";
+    // if asserts have been BUILD-TIME compiled away, then do NOT bother calling putenv
+    #ifndef CEDRUS_DISABLE_ASSERT
+
+        static const char* setting = "CEDRUS_SUPALL_ASRT=1";
         // should return 0 for SUCCESS:
-        /*const int ret =*/ putenv( setting );
+        /*const int ret =*/ putenv( (char*) setting );
+
+    #endif // CEDRUS_DISABLE_ASSERT
     }
 
     inline void UnSuppress_All_Assertions()
     {
-        char negation[] = "CEDRUS_SUPALL_ASRT=";
+    // if asserts have been BUILD-TIME compiled away, then do NOT bother calling putenv
+    #ifndef CEDRUS_DISABLE_ASSERT
+
+        static const char* negation = "CEDRUS_SUPALL_ASRT=";
         // should return 0 for SUCCESS:
-        /*const int ret =*/ putenv( negation );
+        /*const int ret =*/ putenv( (char*) negation ); // on win32, this is enough to nullify the var.
+
+        #if ! defined(_WIN32)
+        /*const int ret =*/ unsetenv( "CEDRUS_SUPALL_ASRT" );// on posix, the above set it to "", and HERE we nullify it
+        #endif //#if ! defined(_WIN32)
+
+    #endif // CEDRUS_DISABLE_ASSERT
     }
 
 }
@@ -199,10 +213,6 @@ namespace Cedrus
 
 #        define CEDRUS_FAIL(msg)
 
-#        define CEDRUS_SUPPRESS_ALL_ASSERTIONS()
-
-#        define CEDRUS_UNSUPPRESS_ALL_ASSERTIONS()
-
 
 #else // the ELSE is when we _ENABLE_ our assertions
 
@@ -215,10 +225,6 @@ namespace Cedrus
          // when assertions are enabled on Win:
 #        define CEDRUS_FAIL(msg)                 \
              do { if ( ! getenv("CEDRUS_SUPALL_ASRT") ) assert( ! msg );  } while ( 0 )
-
-#        define CEDRUS_SUPPRESS_ALL_ASSERTIONS()   Cedrus::Suppress_All_Assertions()
-
-#        define CEDRUS_UNSUPPRESS_ALL_ASSERTIONS() Cedrus::UnSuppress_All_Assertions()
 
 #    elif defined(__APPLE__)
 
@@ -234,9 +240,6 @@ namespace Cedrus
 #        define CEDRUS_FAIL(msg)                 \
             Cedrus::Ced_Fail_Mac( msg, __FILE__, __LINE__,  __func__ )
 
-#        define CEDRUS_SUPPRESS_ALL_ASSERTIONS()   Cedrus::Suppress_All_Assertions()
-
-#        define CEDRUS_UNSUPPRESS_ALL_ASSERTIONS() Cedrus::UnSuppress_All_Assertions()
 
 #else
         // TODO
