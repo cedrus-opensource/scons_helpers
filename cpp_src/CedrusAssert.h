@@ -116,6 +116,8 @@ namespace Cedrus
         #endif // Win/Apple
     }
 
+#if defined(__APPLE__)
+
     inline void Ced_Asrt_Mac
     ( const char* message,
       const char* filename,
@@ -154,6 +156,8 @@ namespace Cedrus
               funcname );
     }
 
+#endif //#if defined(__APPLE__)
+
     inline void Suppress_All_Assertions()
     {
     // if asserts have been BUILD-TIME compiled away, then do NOT bother calling putenv
@@ -180,6 +184,35 @@ namespace Cedrus
         #endif //#if ! defined(_WIN32)
 
     #endif // CEDRUS_DISABLE_ASSERT
+    }
+
+    inline bool GetEnv_WinOnly( const char* name )
+    {
+    #if !defined(_WIN32)
+
+        // suppress warnings about unused parameters on mac:
+        (void) name;
+        return false;
+
+    #else
+
+        size_t converted = 0;
+        wchar_t wtext[500];
+        mbstowcs_s(&converted, wtext, 500, name, 480);
+        LPWSTR ptr = wtext;
+
+        bool rslt = false;
+
+        // get the size of the buffer
+        DWORD dwRet = ::GetEnvironmentVariable(ptr, NULL, 0);
+        if ( dwRet )
+        {
+            rslt = true;
+        }
+
+        return rslt;
+
+    #endif // #if defined(_WIN32)
     }
 
 }
@@ -223,14 +256,14 @@ namespace Cedrus
 #        define CEDRUS_ASSERT(cond, msg)         \
              __pragma(warning(push))         \
              __pragma(warning(disable:4127)) \
-             do { if ( ! getenv("CEDRUS_SUPALL_ASRT") ) assert( ( cond ) && ( msg ) );  } while ( 0 ) \
+             do { if ( ! Cedrus::GetEnv_WinOnly("CEDRUS_SUPALL_ASRT") ) assert( ( cond ) && ( msg ) );  } while ( 0 ) \
              __pragma(warning(pop))
 
          // when assertions are enabled on Win:
 #        define CEDRUS_FAIL(msg)                 \
              __pragma(warning(push))         \
              __pragma(warning(disable:4127)) \
-             do { if ( ! getenv("CEDRUS_SUPALL_ASRT") ) assert( ! msg );  } while ( 0 ) \
+             do { if ( ! Cedrus::GetEnv_WinOnly("CEDRUS_SUPALL_ASRT") ) assert( ! msg );  } while ( 0 ) \
              __pragma(warning(pop))
 
 #    elif defined(__APPLE__)
