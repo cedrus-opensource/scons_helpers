@@ -30,8 +30,8 @@ def run_autoversioning(path,outfile,input_file):
 
     # IMPORTANT! do NOT make changes to how we populate AutoversionHeader without
     # giving CAREFUL CONSIDERATION to potential side-effects on class DeveloperHeaderForDiskFile
-    output = """#define APPLICATION_BUILD_VERSION_STRING wxT("%s")
-#define APPLICATION_SHORT_VERSION_STRING wxT("%s")
+    output = """#define APPLICATION_BUILD_VERSION_STRING "%s"
+#define APPLICATION_SHORT_VERSION_STRING "%s"
 """ % ( text_version, current_version )
 
 #   print( output )
@@ -50,5 +50,5 @@ def run_autoversioning(path,outfile,input_file):
 #
 # cd "${PROJECT_DIR}/../../src/SuperLab/"
 #
-# echo "#define APPLICATION_BUILD_VERSION_STRING wxT(\"${TEXT_VERSION}\")
-# #define APPLICATION_SHORT_VERSION_STRING wxT(\"${APPLICATION_VERSION}\")" > ApplicationVersion.h
+# echo "#define APPLICATION_BUILD_VERSION_STRING \"${TEXT_VERSION}\"
+# #define APPLICATION_SHORT_VERSION_STRING \"${APPLICATION_VERSION}\" > ApplicationVersion.h
