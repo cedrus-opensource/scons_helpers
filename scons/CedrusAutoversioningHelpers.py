@@ -21,6 +21,7 @@ def get_git_version():
 def run_autoversioning(path,outfile,input_file):
     sock = open(input_file,"r")
     current_version = sock.readline().rstrip(' \n')
+    gui_label_version = sock.readline().rstrip(' \n')
     sock.close()
 
     git_version = get_git_version()
@@ -32,7 +33,8 @@ def run_autoversioning(path,outfile,input_file):
     # giving CAREFUL CONSIDERATION to potential side-effects on class DeveloperHeaderForDiskFile
     output = """#define APPLICATION_BUILD_VERSION_STRING "%s"
 #define APPLICATION_SHORT_VERSION_STRING "%s"
-""" % ( text_version, current_version )
+#define APPLICATION_GUI_LABELS_APP_NAME "%s"
+""" % ( text_version, current_version, gui_label_version )
 
 #   print( output )
 
