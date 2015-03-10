@@ -28,13 +28,15 @@ def run_autoversioning(path,outfile,input_file):
 
     current_date = time.strftime("%B %d, %Y" )
     text_version ="Version %s\\n%s release (build %s)" % ( current_version, current_date, git_version )
+    copyright_and_year = "(c) Copyright Cedrus Corporation 1991-%s,\\nSan Pedro, California." % ( time.strftime("%Y") )
 
     # IMPORTANT! do NOT make changes to how we populate AutoversionHeader without
     # giving CAREFUL CONSIDERATION to potential side-effects on class DeveloperHeaderForDiskFile
     output = """#define APPLICATION_BUILD_VERSION_STRING "%s"
 #define APPLICATION_SHORT_VERSION_STRING "%s"
 #define APPLICATION_GUI_LABELS_APP_NAME "%s"
-""" % ( text_version, current_version, gui_label_version )
+#define APPLICATION_CURRENT_YEAR "%s"
+""" % ( text_version, current_version, gui_label_version, copyright_and_year )
 
 #   print( output )
 
