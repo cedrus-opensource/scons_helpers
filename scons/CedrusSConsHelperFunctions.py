@@ -393,6 +393,7 @@ def _make_a_mac_app_plist(
     app_name,
     info_string,
     version_string,
+    min_macos_version,
     target,
     source,
     env
@@ -408,9 +409,10 @@ def _make_a_mac_app_plist(
     os.system( start_of_command + ' CFBundleVersion '            + '"' + version_string + '"' )
     os.system( start_of_command + ' CFBundleGetInfoString '      + '"' + info_string + '"' )
     os.system( start_of_command + ' CFBundleExecutable '         + '"' + app_name + '"' )
+    os.system( start_of_command + ' LSMinimumSystemVersion '     + '"' + min_macos_version + '"' )
 
-def _make_one_lambda_for_plist( app_name, info_string, version_string ):
-    return lambda target, source, env : _make_a_mac_app_plist( app_name, info_string, version_string, target, source, env  )
+def _make_one_lambda_for_plist( app_name, info_string, version_string, min_macos_version ):
+    return lambda target, source, env : _make_a_mac_app_plist( app_name, info_string, version_string, min_macos_version, target, source, env  )
 
 def DeclareSConsComplexGUIAppProgramBuild(
     env,
@@ -419,6 +421,7 @@ def DeclareSConsComplexGUIAppProgramBuild(
     plist_file,
     app_version_string,
     app_copyright_and_info_string,
+    app_min_macos_version,
     inputs,
     defines,
     cpppath,
@@ -459,7 +462,8 @@ def DeclareSConsComplexGUIAppProgramBuild(
             [_make_one_lambda_for_plist(
                 app_name,
                 app_copyright_and_info_string,
-                app_version_string ),
+                app_version_string,
+                app_min_macos_version),
              Chmod('$TARGET', 0644)]
             )
 
