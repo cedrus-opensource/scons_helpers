@@ -84,7 +84,6 @@ class WindowsSettings:
             '/Zm256',
             '/I'+os.getenv('SYSTEMDRIVE','') + '\Program Files\Bonjour SDK\include',
             '/I'+os.getenv('SYSTEMDRIVE','') + '\Program Files (x86)\Bonjour SDK\include',
-            '/I'+os.getenv('CEDRUS_SDKS','') + '/msinttypes/',
             #'/showIncludes',
         ]
 
