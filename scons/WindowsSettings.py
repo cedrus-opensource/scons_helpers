@@ -82,8 +82,6 @@ class WindowsSettings:
             # '/Wp64', # deprecated
             '/wd4068',  # no unknown pragmas
             '/Zm256',
-            '/I'+os.getenv('SYSTEMDRIVE','') + '\Program Files\Bonjour SDK\include',
-            '/I'+os.getenv('SYSTEMDRIVE','') + '\Program Files (x86)\Bonjour SDK\include',
             #'/showIncludes',
         ]
 
