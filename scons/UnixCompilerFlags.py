@@ -4,7 +4,6 @@ import platform
 unix_common_cxxflags =  [
 	'-fmessage-length=0',
 	'-pipe',
-	'-fpermissive',
 	'-fstack-check',
 	'-ftrapv',
 	'-fno-gnu-keywords',
