@@ -22,8 +22,8 @@ much, because they are general for all projects.
 def _get_mac_global_defaults( env ):
 
     mac = MacSettings.MacSettings( env['WX_VERSION'] )
-    env['CXX'] = 'g++-4.0'
-    env['CC'] = 'gcc-4.0'
+    env['CXX'] = 'clang++'
+    env['CC'] = 'clang'
 
     env['RPATHPREFIX'] = ''
     env['_RPATH'] = ''
