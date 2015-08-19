@@ -342,6 +342,11 @@ def PerformCedrusSConsGlobalGeneralStartup( no_longer_used='' ):
     else:
         env = Environment()
 
+    # explicitly pull these values from the enclosing environment:
+    env['BOOST_VERSION'] = os.getenv('BOOST_VERSION','')
+    # explicitly pull these values from the enclosing environment:
+    env['WX_VERSION'] = os.getenv('WX_VERSION','')
+
     env.SetOption('num_jobs', int(os.getenv('NUM_CPU',4))  )
     print "Running with -j", env.GetOption('num_jobs')
 
