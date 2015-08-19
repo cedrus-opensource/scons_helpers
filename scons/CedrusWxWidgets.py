@@ -85,50 +85,27 @@ class CedrusWxWidgetsMac:
         cxxflags = []
         if self.debug:
             if self.wx_version_num == '2.8':
-                if not platform.mac_ver()[0].startswith('10.4'):
-                    cxxflags = [
-                        '-isystem'+os.getenv('WXWIN_SL','')+'/include/',
-                        '-isystem'+os.getenv('WXWIN_SL','')+'/built_libs/lib/wx/include/mac-unicode-debug-'+env['WX_VERSION']+'-i386'
-                        ]
-                else:
-                    cxxflags = [
-                        '-I'+os.getenv('WXWIN_SL','')+'/include/',
-                        '-I'+os.getenv('WXWIN_SL','')+'/built_libs/lib/wx/include/mac-unicode-debug-'+env['WX_VERSION']+'-i386',
-                        ]
+                cxxflags = [
+                    '-isystem'+os.getenv('WXWIN_SL','')+'/include/',
+                    '-isystem'+os.getenv('WXWIN_SL','')+'/built_libs/lib/wx/include/mac-unicode-debug-'+env['WX_VERSION']+'-i386'
+                    ]
+
             else: # this 'else' used to be for testing 2.8.10, but now it's for 2.9 !
-                if not platform.mac_ver()[0].startswith('10.4'):
-                    cxxflags = [
-                        '-isystem'+os.getenv('WXWIN_29','')+'/include/',
-                        '-isystem'+os.getenv('WXWIN_29','')+'/built_libs/lib/wx/include/osx_cocoa-unicode-'+env['WX_VERSION']
-                        ]
-                else:
-                    cxxflags = [
-                        '-I'+os.getenv('WXWIN_29','')+'/include/',
-                        '-I'+os.getenv('WXWIN_29','')+'/built_libs/lib/wx/include/osx_cocoa-unicode-'+env['WX_VERSION']
-                        ]
+                cxxflags = [
+                    '-isystem'+os.getenv('WXWIN_29','')+'/include/',
+                    '-isystem'+os.getenv('WXWIN_29','')+'/built_libs/lib/wx/include/osx_cocoa-unicode-'+env['WX_VERSION']
+                    ]
         else:
             if self.wx_version_num == '2.8':
-                if not platform.mac_ver()[0].startswith('10.4'):
-                    cxxflags = [
-                        '-isystem'+os.getenv('WXWIN_SL','')+'/include/',
-                        '-isystem'+os.getenv('WXWIN_SL','')+'/built_libs/lib/wx/include/mac-unicode-release-'+env['WX_VERSION']+'-i386'
-                        ]
-                else:
-                    cxxflags = [
-                        '-I'+os.getenv('WXWIN_SL','')+'/include/',
-                        '-I'+os.getenv('WXWIN_SL','')+'/built_libs/lib/wx/include/mac-unicode-release-'+env['WX_VERSION']+'-i386'
-                        ]
+                cxxflags = [
+                    '-isystem'+os.getenv('WXWIN_SL','')+'/include/',
+                    '-isystem'+os.getenv('WXWIN_SL','')+'/built_libs/lib/wx/include/mac-unicode-release-'+env['WX_VERSION']+'-i386'
+                    ]
             else:
-                if not platform.mac_ver()[0].startswith('10.4'):
-                    cxxflags = [
-                        '-isystem'+os.getenv('WXWIN_29','')+'/include/',
-                        '-isystem'+os.getenv('WXWIN_29','')+'/built_libs/lib/wx/include/osx_cocoa-unicode-'+env['WX_VERSION']
-                        ]
-                else:
-                    cxxflags = [
-                        '-I'+os.getenv('WXWIN_29','')+'/include/',
-                        '-I'+os.getenv('WXWIN_29','')+'/built_libs/lib/wx/include/osx_cocoa-unicode-'+env['WX_VERSION']
-                        ]
+                cxxflags = [
+                    '-isystem'+os.getenv('WXWIN_29','')+'/include/',
+                    '-isystem'+os.getenv('WXWIN_29','')+'/built_libs/lib/wx/include/osx_cocoa-unicode-'+env['WX_VERSION']
+                    ]
 
         env.AppendUnique( CXXFLAGS = cxxflags )
 
