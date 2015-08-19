@@ -318,33 +318,19 @@ def PerformCedrusSConsGlobalGeneralStartup( no_longer_used='' ):
         env = Environment( MSVC_VERSION='10.0' )
         print "Using Visual Studio Version " + env['MSVC_VERSION']
 
-        #Get additional version information from the Windows Registry
-        #and return a tuple (version, csd, ptype) referring to version
-        #number, CSD level and OS type (multi/single processor).
+        win_setting_for_vs100 = os.getenv('VS100COMNTOOLS')
 
-        win_platform_info = platform.win32_ver() #release='', version='', csd='', ptype='')
+        if str(win_setting_for_vs100) == '':
+            win_vars_bat_path = 'C:\\Program Files (x86)\\Microsoft Visual Studio 10.0\\VC\\bin\\vcvars32.bat'
+            print 'Failed to read the expected environment variable VS100COMNTOOLS.'
+        else:
+            win_vars_bat_path = str(win_setting_for_vs100) + '\\..\\..\\VC\\bin\\vcvars32.bat'
 
-        version_info = win_platform_info[0]
-        csd_info = win_platform_info[1]
-
-        # on our XP box we get version: XP
-        # on our XP box we get csd: 5.1.2600
-
-        if version_info != 'XP':
-            # now it looks like both win7 *and* the vista machine are fixed if we use MSVC_USE_SCRIPT
-
-            win_setting_for_vs100 = os.getenv('VS100COMNTOOLS')
-
-            if str(win_setting_for_vs100) == '':
-                win_vars_bat_path = 'C:\\Program Files (x86)\\Microsoft Visual Studio 10.0\\VC\\bin\\vcvars32.bat'
-                print 'Failed to read the expected environment variable VS100COMNTOOLS.'
-            else:
-                win_vars_bat_path = str(win_setting_for_vs100) + '\\..\\..\\VC\\bin\\vcvars32.bat'
-
-            env = Environment(
-                MSVC_VERSION='10.0',
-                MSVC_USE_SCRIPT=win_vars_bat_path
-                )
+        # now it looks like both win7 *and* the vista machine are fixed if we use MSVC_USE_SCRIPT
+        env = Environment(
+            MSVC_VERSION='10.0',
+            MSVC_USE_SCRIPT=win_vars_bat_path
+            )
 
         env['WINDOWS_INSERT_MANIFEST'] = True
 
