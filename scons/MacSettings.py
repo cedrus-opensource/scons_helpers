@@ -8,7 +8,7 @@ class MacSettings:
         self.wxVersion = wxVersion
         if wxVersion == '2.8':
             self.wxEnvVar = 'WXWIN_SL'
-        elif wxVersion == '2.9':
+        elif wxVersion >= '2.9':
             self.wxEnvVar = 'WXWIN_29'
         else:
             print "Unsupported wxWidgets version!"

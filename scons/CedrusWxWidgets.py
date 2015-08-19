@@ -26,7 +26,7 @@ class CedrusWxWidgetsSettings:
         else:
             raise ValueError('Unknown Operating System')
 
-        if env['WX_VERSION'] == '2.9':
+        if env['WX_VERSION'] >= '2.9':
             env.AppendUnique( CPPDEFINES = [ 'WX_PREPROC_FLAG=2930' ] )
 
         self.env = env
@@ -71,7 +71,7 @@ class CedrusWxWidgetsMac:
         self.mac_str = 'macu'
         self.carb_coco_str = 'base_carbonu'
 
-        if wxVersion == '2.9':
+        if wxVersion >= '2.9':
             self.mac_str = 'osx_cocoau'
             self.carb_coco_str = 'baseu'
 
