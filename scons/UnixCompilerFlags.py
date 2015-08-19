@@ -4,7 +4,7 @@ import platform
 unix_common_cxxflags =  [
 	'-fmessage-length=0',
 	'-pipe',
-	'-fstack-check',
+#	'-fstack-check', # on the mac, clang does not support this. enable this in Cedrus file LinuxSettings.py (for gcc) if you wish.
 	'-ftrapv',
 	'-fno-gnu-keywords',
 	'-funit-at-a-time',
@@ -19,7 +19,7 @@ unix_common_cxxflags =  [
 	'-Wextra',
 #	'-Werror',
 
-	'-Wstrict-null-sentinel',
+#	'-Wstrict-null-sentinel', # on the mac, clang does not support this. enable this in Cedrus file LinuxSettings.py (for gcc) if you wish.
 	'-Woverloaded-virtual',
 	'-Wmissing-braces',
 	'-Wunused-parameter',
