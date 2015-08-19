@@ -38,8 +38,8 @@ class MacSettings:
                 '__WXOSX__',
                 '__WXOSX_COCOA__',
                 'wxUSE_SERVICE_DISCOVERY=1',
-                'MAC_OS_X_VERSION_MIN_REQUIRED=1050',
-                'MACOSX_DEPLOYMENT_TARGET=10.5',
+                'MAC_OS_X_VERSION_MIN_REQUIRED=1070',
+                'MACOSX_DEPLOYMENT_TARGET=10.7',
                 'OS_MACOSX=OS_MACOSX',
             ]
 
@@ -66,8 +66,9 @@ class MacSettings:
         elif self.wxEnvVar == 'WXWIN_29':
             return [
                 '-F$OBJ_ROOT',
-                '-isysroot/Developer/SDKs/MacOSX10.5.sdk',
-                '-mmacosx-version-min=10.5',
+                '-isysroot/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk',
+                '-mmacosx-version-min=10.7',
+                '-stdlib=libc++',
                 ]
 
     def getCommonCxxFlags(self):
@@ -92,9 +93,11 @@ class MacSettings:
                 '-Woverloaded-virtual',
                 '-fvisibility-ms-compat',
                 '-fvisibility-inlines-hidden',
-                '-isysroot/Developer/SDKs/MacOSX10.5.sdk',
-                '-mmacosx-version-min=10.5',
+                '-isysroot/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk',
+                '-mmacosx-version-min=10.7',
                 '-fstrict-aliasing',
+                '-std=c++11',
+                '-stdlib=libc++',
                 ]
 
     def getDebugCxxFlags(self):
