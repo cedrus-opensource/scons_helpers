@@ -39,13 +39,10 @@ def need_gmock_windows(env):
 
 def need_gmock_mac(env):
 
-    if not platform.mac_ver()[0].startswith('10.4'):
-        include_path = [ '-isystem'+os.getenv('GMOCK', '')+'/include', ]
-    else:
-        include_path = [ '-I'+os.getenv('GMOCK', '')+'/include', ]
+    include_path = [ '-isystem'+os.getenv('GMOCK', '')+'/include', ]
 
     lib_path = [ os.getenv('GMOCK', '')+'/lib', ]
-    linked_libs = [ 'gmock', 'gtest' ]
+    linked_libs = [ 'gtest.0' ]
 
     env.AppendUnique( CXXFLAGS = include_path,
                 LIBS = linked_libs,
