@@ -92,7 +92,7 @@ class CedrusWxWidgetsMac:
 
             else: # this 'else' used to be for testing 2.8.10, but now it's for 2.9 !
                 cxxflags = [
-                    '-isystem'+os.getenv('WXWIN_29','')+'/include/',
+                    '-isystem'+os.getenv('WXWIN_29','')+'/built_libs/include/wx-'+env['WX_VERSION'],
                     '-isystem'+os.getenv('WXWIN_29','')+'/built_libs/lib/wx/include/osx_cocoa-unicode-'+env['WX_VERSION']
                     ]
         else:
@@ -103,7 +103,7 @@ class CedrusWxWidgetsMac:
                     ]
             else:
                 cxxflags = [
-                    '-isystem'+os.getenv('WXWIN_29','')+'/include/',
+                    '-isystem'+os.getenv('WXWIN_29','')+'/built_libs/include/wx-'+env['WX_VERSION'],
                     '-isystem'+os.getenv('WXWIN_29','')+'/built_libs/lib/wx/include/osx_cocoa-unicode-'+env['WX_VERSION']
                     ]
 
