@@ -132,7 +132,7 @@ class MacSettings:
             '-funit-at-a-time',
             '-falign-labels',
             '-arch',
-            'i386',
+            'x86_64',
             '-ftree-vectorize',
         ]
 
@@ -170,7 +170,7 @@ class MacSettings:
     def getReleaseLinkerFlags(self):
         return [
             '-arch',
-            'i386',
+            'x86_64',
         ]
 
     def getDebugLibraries(self):
