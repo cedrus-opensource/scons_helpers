@@ -23,25 +23,15 @@ def publish_all_libs_to_staging(env):
 
 
 def publish_all_libs_to_staging_mac(env):
-    base_folder = os.getenv('WXGUITEST','')
 
-    if env['WX_VERSION'] == '2.8':
-        base_folder += '_2.8'
-
-    # publish dylibs
-    if env['BUILD_TYPE'] == 'dbg':
-        gui_test_libs =  env.Glob(base_folder+'/built_libs/debug/*.dylib')
-        gui_test_libs += env.Glob(base_folder+'/built_libs/debug/*.a')
+    if env['BUILD_TYPE'] == 'opt':
+        lib = os.getenv('WXWIN_29','') + '/built_libs/lib/libwxGuiTesting_opt.dylib'
     else:
-        gui_test_libs =  env.Glob(base_folder+'/built_libs/release/*.dylib')
-        gui_test_libs += env.Glob(base_folder+'/built_libs/release/*.a')
+        lib = os.getenv('WXWIN_29','') + '/built_libs/lib/libwxGuiTesting_dbg.dylib'
 
     results = []
 
-    for lib in gui_test_libs:
-        name_parts = os.path.splitext(lib.name)
-        if name_parts[1] == '.dylib':
-            results += env.Install( '$STAGING_DIR', lib )
+    results += env.Install( '$STAGING_DIR', lib )
 
     return results
 
@@ -51,38 +41,20 @@ def publish_all_libs_to_staging_windows(env):
 
 def need_wxGuiTest_mac(env):
 
-    base_folder = os.getenv('WXGUITEST','')
+    include_path = [ '-isystem'+os.getenv('WXGUITEST','')+'/cppunit-1.13.2/include',
+                     '-isystem'+os.getenv('WXGUITEST','')+'/wxGuiTest/include' ]
 
-    if env['WX_VERSION'] == '2.8':
-        base_folder += '_2.8'
-
-    if env['BUILD_TYPE'] == 'dbg':
-        lib_path = base_folder+'/built_libs/debug'
+    if env['BUILD_TYPE'] == 'opt':
+        linked_libs = [ 'wxGuiTesting_opt', 'cppunit' ]
     else:
-        lib_path = base_folder+'/built_libs/release'
+        linked_libs = [ 'wxGuiTesting_dbg', 'cppunit' ]
 
-    if not platform.mac_ver()[0].startswith('10.4'):
-        include_path = [ '-isystem'+os.getenv('WXGUITEST','')+'/include' ]
-    else:
-        include_path = [ '-I'+os.getenv('WXGUITEST','')+'/include' ]
-
-    linked_libs = [ 'wxGuiTesting', 'cppunit' ]
+    lib_path = [ os.getenv('WXWIN_29','') + '/built_libs/lib/' ]
 
     env.AppendUnique( CXXFLAGS = include_path,
-                LIBS = linked_libs,
-                LIBPATH = lib_path,
-                )
-
-    if sys.platform == 'darwin' and env['BUILD_TYPE'] == 'opt':
-        # because wxGuiTest is only built for i386, we need to reset the
-        # default -arch flags we give to g++ and ld
-        CedrusSConsHelperFunctions.FromSwtoolkitFilterOut(
-            env,
-            CXXFLAGS=['-arch','i386','ppc'],
-            LINKFLAGS=['-arch','i386','ppc']
-            )
-        env.Append(CXXFLAGS=['-arch','i386'],
-                   LINKFLAGS=['-arch','i386'])
+                      LIBS = linked_libs,
+                      LIBPATH = lib_path,
+                      )
 
 
 def need_wxGuiTest_windows(env):
