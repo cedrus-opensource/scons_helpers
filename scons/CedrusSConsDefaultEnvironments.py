@@ -88,7 +88,7 @@ def _get_mac_release_defaults( env ):
         CXXFLAGS = mac.getReleaseCxxFlags(),
         CPPPATH= mac.getReleaseIncludes(),
         CCFLAGS =  # believe it or not, we need flags for 'plain old C' code!  it's for sqlite (written in C), in DataViewer
-            [ '-arch', 'i386' ],
+            [ '-arch', 'x86_64' ],
         )
 
     return env
