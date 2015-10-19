@@ -83,6 +83,8 @@ def publish_all_libs_to_staging_windows(env, app_suffix):
         'LIBSNDFILE', '') + '/' + CEDRUS_LIBSNDFILE_VERSION_UNDERSCORE +
                                 '/Win32/libsndfile-1.dll')
 
+    ENV_VAR_VAL_PORTAUDIO = str(os.getenv('PORTAUDIO', ''))
+
     dependency_port_audio_name = 'portaudio_x86.dll'
     dependency_port_audio = ENV_VAR_VAL_PORTAUDIO + '/build/msvc/Win32/Release/' + dependency_port_audio_name
 
