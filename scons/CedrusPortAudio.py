@@ -117,4 +117,12 @@ def publish_all_libs_to_staging_mac(env, app_suffix):
         frameworks_dir + '/' + dependency_port_audio_name,
         dependency_port_audio, SCons.Script.Copy("$TARGET", "$SOURCE"))
 
+    weird_other_folder_so_tests_launch = os.path.normpath( str( env.subst( '$STAGING_DIR/../Frameworks/' ) ) )
+
+    results += env.Install(weird_other_folder_so_tests_launch, dependency_libsndfile)
+
+    results += env.Command(
+        weird_other_folder_so_tests_launch + '/' + dependency_port_audio_name,
+        dependency_port_audio, SCons.Script.Copy("$TARGET", "$SOURCE"))
+
     return results
