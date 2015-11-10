@@ -18,6 +18,14 @@ def _get_outer_app_folder(env, app_suffix):
     elif sys.platform == 'win32':
         return env.subst('$STAGING_DIR/')
 
+def _get_outer_testapp_folder(env):
+
+    if sys.platform == 'darwin':
+        return env.subst('$STAGING_DIR/') + 'TestAppForRegistrationDialog.app'
+    elif sys.platform == 'win32':
+        # not really needed at all on win32. dll(s) already put here by _get_outer_app_folder
+        return env.subst('$STAGING_DIR/')
+
 
 def need_pa_w_sndfile(env):
     if sys.platform == 'darwin':
@@ -108,13 +116,32 @@ def publish_all_libs_to_staging_mac(env, app_suffix):
     dependency_port_audio = os.getenv(
         'PA_WITH_LIBSF', '') + os.path.sep + 'lib/libportaudio.2.dylib'
 
-    frameworks_dir = _get_outer_app_folder(
+    frameworks_dir1 = _get_outer_app_folder(
         env, app_suffix) + '/Contents/Frameworks/'
 
-    results = env.Install(frameworks_dir, dependency_libsndfile)
+    results = env.Install(frameworks_dir1, dependency_libsndfile)
 
     results += env.Command(
-        frameworks_dir + '/' + dependency_port_audio_name,
+        frameworks_dir1 + '/' + dependency_port_audio_name,
+        dependency_port_audio, SCons.Script.Copy("$TARGET", "$SOURCE"))
+
+    # since SLPlugInCommon needs portaudio, and TestAppForRegistrationDialog needs SLPlugInCommon,
+    # then (you can easily deduce) TestAppForRegistrationDialog needs the dylibs in its Frameworks
+    frameworks_dir2 = _get_outer_testapp_folder(
+        env) + '/Contents/Frameworks/'
+
+    results += env.Install(frameworks_dir2, dependency_libsndfile)
+
+    results += env.Command(
+        frameworks_dir2 + '/' + dependency_port_audio_name,
+        dependency_port_audio, SCons.Script.Copy("$TARGET", "$SOURCE"))
+
+    weird_other_folder_so_tests_launch = os.path.normpath( str( env.subst( '$STAGING_DIR/../Frameworks/' ) ) )
+
+    results += env.Install(weird_other_folder_so_tests_launch, dependency_libsndfile)
+
+    results += env.Command(
+        weird_other_folder_so_tests_launch + '/' + dependency_port_audio_name,
         dependency_port_audio, SCons.Script.Copy("$TARGET", "$SOURCE"))
 
     return results
