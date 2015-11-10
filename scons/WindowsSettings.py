@@ -81,7 +81,7 @@ class WindowsSettings:
             '/W4',
             # '/Wp64', # deprecated
             '/wd4068',  # no unknown pragmas
-            '/Zm256',
+            '/Zm323',
             #'/showIncludes',
         ]
 
