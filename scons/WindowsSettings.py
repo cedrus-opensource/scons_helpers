@@ -79,8 +79,11 @@ class WindowsSettings:
             '/TP',
             '/FC', # use full pathnames in diagnostics (full paths will show up in "Error List" in visual studio
             '/W4',
-            # '/Wp64', # deprecated
             '/wd4068',  # no unknown pragmas
+            '/wd4275',  # non dll-interface class used as base for dll-interface class. http://www.unknownroad.com/rtfm/VisualStudio/warningC4251.html
+            '/wd4503',  # decorated name length exceeded, name was truncated
+            '/wd4481',  # nonstandard extension used: override specifier 'override'
+            '/wd4996',  # '____' was declared deprecated
             '/Zm323',
             #'/showIncludes',
         ]
