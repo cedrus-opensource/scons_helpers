@@ -91,6 +91,7 @@ class MacSettings:
                 '-Wshorten-64-to-32',
                 '-Wnewline-eof',
                 '-Woverloaded-virtual',
+                '-ftemplate-depth=256', # <-- our 10.8 machines were using 128. some boost spirit grammars need more.
                 '-fvisibility-ms-compat',
                 '-fvisibility-inlines-hidden',
                 '-isysroot/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk',
