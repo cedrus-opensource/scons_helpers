@@ -64,11 +64,20 @@ class MacSettings:
                 ]
 
         elif self.wxEnvVar == 'WXWIN_29':
-            return [
-                '-F$OBJ_ROOT',
-                '-isysroot/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk',
-                '-mmacosx-version-min=10.7',
-                '-stdlib=libc++',
+            # after we ship 5.0.5 we can remove this next 'if' and just ALWAYS do 10.9 sdk:
+            if not platform.mac_ver()[0].startswith('10.11'):
+                return [
+                    '-F$OBJ_ROOT',
+                    '-isysroot/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk',
+                    '-mmacosx-version-min=10.7',
+                    '-stdlib=libc++',
+                ]
+            else:
+                return [
+                    '-F$OBJ_ROOT',
+                    '-isysroot/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk',
+                    '-mmacosx-version-min=10.9',
+                    '-stdlib=libc++',
                 ]
 
     def getCommonCxxFlags(self):
@@ -86,19 +95,36 @@ class MacSettings:
                 ]
 
         elif self.wxEnvVar == 'WXWIN_29':
-            return UnixCompilerFlags.unix_common_cxxflags + [
-                '-Wmost',
-                '-Wshorten-64-to-32',
-                '-Wnewline-eof',
-                '-Woverloaded-virtual',
-                '-ftemplate-depth=256', # <-- our 10.8 machines were using 128. some boost spirit grammars need more.
-                '-fvisibility-ms-compat',
-                '-fvisibility-inlines-hidden',
-                '-isysroot/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk',
-                '-mmacosx-version-min=10.7',
-                '-fstrict-aliasing',
-                '-std=c++11',
-                '-stdlib=libc++',
+            # after we ship 5.0.5 we can remove this next 'if' and just ALWAYS do 10.9 sdk:
+            if not platform.mac_ver()[0].startswith('10.11'):
+                return UnixCompilerFlags.unix_common_cxxflags + [
+                    '-Wmost',
+                    '-Wshorten-64-to-32',
+                    '-Wnewline-eof',
+                    '-Woverloaded-virtual',
+                    '-ftemplate-depth=256', # <-- our 10.8 machines were using 128. some boost spirit grammars need more.
+                    '-fvisibility-ms-compat',
+                    '-fvisibility-inlines-hidden',
+                    '-isysroot/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk',
+                    '-mmacosx-version-min=10.7',
+                    '-fstrict-aliasing',
+                    '-std=c++11',
+                    '-stdlib=libc++',
+                ]
+            else:
+                return UnixCompilerFlags.unix_common_cxxflags + [
+                    '-Wmost',
+                    '-Wshorten-64-to-32',
+                    '-Wnewline-eof',
+                    '-Woverloaded-virtual',
+                    '-ftemplate-depth=256', # <-- our 10.8 machines were using 128. some boost spirit grammars need more.
+                    '-fvisibility-ms-compat',
+                    '-fvisibility-inlines-hidden',
+                    '-isysroot/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk',
+                    '-mmacosx-version-min=10.9',
+                    '-fstrict-aliasing',
+                    '-std=c++11',
+                    '-stdlib=libc++',
                 ]
 
     def getDebugCxxFlags(self):
@@ -110,6 +136,12 @@ class MacSettings:
             '-g',
             '-O0'
         ]
+
+        # after we ship 5.0.5 we can remove this next 'if' and just ALWAYS do this:
+        if platform.mac_ver()[0].startswith('10.11'):
+            # if you want (via homebrew) to get GDB, then you need this flag so breakpoints work in gdb:
+            flags += [ '-fstandalone-debug' ]
+
         return flags
 
 
@@ -166,6 +198,13 @@ class MacSettings:
             '-arch',
             current_arch,
         ]
+
+        # after we ship 5.0.5 we can remove this next 'if' and just ALWAYS do this:
+        if platform.mac_ver()[0].startswith('10.11'):
+            # the '-fstandalone' is to help out GDB. but using the debug sym flags in the linker
+            # is now ESSENTIAL so that our dSYM symbols work (in lldb! in Xcode! not just for gdb)
+            flags += [ '-g', '-fstandalone-debug' ]
+
         return flags
 
     def getReleaseLinkerFlags(self):
@@ -189,4 +228,3 @@ class MacSettings:
     def getReleaseIncludes(self):
         return [
         ]
-
