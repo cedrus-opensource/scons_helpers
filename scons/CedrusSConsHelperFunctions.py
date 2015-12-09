@@ -3,6 +3,7 @@
 from SCons.Script import *
 import gMock
 import os
+import sys
 import time
 import smtplib
 
@@ -194,6 +195,14 @@ def _common_cedrus_build_code(
     else:
         built_final_compiled_product = lambda_functor( env, project_target_name, inputs )
         stage_it = env.Install( env.subst('$STAGING_DIR'), built_final_compiled_product )
+
+    # for now i only run dsymutil in a debug build. (i don't want dSYM bundles polluting the installer, and have not refined for that yet)
+    if sys.platform == 'darwin' and env['BUILD_TYPE'] == 'dbg':
+        def dsymutilFunc( env, source, target ):
+            os.system( "dsymutil " + target[0].get_abspath() )
+
+        env.AddPostAction( stage_it, dsymutilFunc )
+
 
     env.Alias( str(project_target_name), stage_it )
 
