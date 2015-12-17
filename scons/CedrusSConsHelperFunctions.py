@@ -6,6 +6,7 @@ import os
 import sys
 import time
 import smtplib
+import platform
 
 #------------------------------------------------------------------------------
 
@@ -523,6 +524,9 @@ def DeclareSConsProgramWithRunnableGoogleTests(
     linkflags,
     skip_test_execution = False
 ):
+    if platform.mac_ver()[0].startswith('10.7'):
+        return
+
     cpppath.append( str( os.getenv('GMOCK','')+'/include' ) )
     cpppath.append( str( os.getenv('GTEST','')+'/include' ) )
 
