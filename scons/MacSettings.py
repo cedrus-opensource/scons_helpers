@@ -128,11 +128,10 @@ class MacSettings:
                 ]
 
     def getDebugCxxFlags(self):
-        current_arch = platform.machine()
 
         flags = [
             '-arch',
-            current_arch,
+            'x86_64',
             '-g',
             '-O0'
         ]
@@ -192,11 +191,10 @@ class MacSettings:
         return result
 
     def getDebugLinkerFlags(self):
-        current_arch = platform.machine()
 
         flags = [
             '-arch',
-            current_arch,
+            'x86_64',
         ]
 
         # after we ship 5.0.5 we can remove this next 'if' and just ALWAYS do this:
