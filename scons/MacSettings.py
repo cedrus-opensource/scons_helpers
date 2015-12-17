@@ -145,28 +145,45 @@ class MacSettings:
 
 
     def getReleaseCxxFlags(self):
-        flags = [
-            '-Os',
-            '-fdelete-null-pointer-checks',
-            '-fexpensive-optimizations',
-            '-ftree-pre',
-            '-fweb',
-            '-fstrength-reduce',
-            '-fthread-jumps',
-            '-fcrossjumping',
-            '-foptimize-sibling-calls',
-            '-fcse-follow-jumps',
-            '-fcse-skip-blocks',
-            '-fgcse',
-            '-fgcse-lm',
-            '-fregmove',
-            '-freorder-functions',
-            '-funit-at-a-time',
-            '-falign-labels',
-            '-arch',
-            'x86_64',
-            '-ftree-vectorize',
-        ]
+
+        # after we ship 5.0.5 we can remove this next 'if' and just ALWAYS do 10.9 sdk:
+        if not platform.mac_ver()[0].startswith('10.11'):
+
+            flags = [
+                '-Os',
+                '-fdelete-null-pointer-checks',
+                '-fexpensive-optimizations',
+                '-ftree-pre',
+                '-fweb',
+                '-fstrength-reduce',
+                '-fthread-jumps',
+                '-fcrossjumping',
+                '-foptimize-sibling-calls',
+                '-fcse-follow-jumps',
+                '-fcse-skip-blocks',
+                '-fgcse',
+                '-fgcse-lm',
+                '-fregmove',
+                '-freorder-functions',
+                '-funit-at-a-time',
+                '-falign-labels',
+                '-arch',
+                'x86_64',
+                '-ftree-vectorize',
+            ]
+
+        else:
+            flags = [
+                '-Os',
+                '-fexpensive-optimizations',
+                '-fstrength-reduce',
+                '-foptimize-sibling-calls',
+                '-fgcse',
+                '-funit-at-a-time',
+                '-arch',
+                'x86_64',
+                '-ftree-vectorize',
+            ]
 
         return flags
 
