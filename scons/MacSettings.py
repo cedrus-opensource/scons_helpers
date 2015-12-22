@@ -209,6 +209,13 @@ class MacSettings:
 
     def getDebugLinkerFlags(self):
 
+        """
+        a note in case you are having trouble getting libgmalloc to load into your process.
+        For me, on mac 10.8, i had to use linker flag:  #'-lgmalloc',
+        ... and the path to the dylib was:
+            '/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/usr/lib'
+        """
+
         flags = [
             '-arch',
             'x86_64',
