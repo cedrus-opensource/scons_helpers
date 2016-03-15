@@ -200,7 +200,7 @@ def _common_cedrus_build_code(
     # for now i only run dsymutil in a debug build. (i don't want dSYM bundles polluting the installer, and have not refined for that yet)
     if sys.platform == 'darwin' and env['BUILD_TYPE'] == 'dbg':
         def dsymutilFunc( env, source, target ):
-            os.system( "dsymutil " + target[0].get_abspath() )
+            os.system( "dsymutil '" + target[0].get_abspath() + "'" )
 
         env.AddPostAction( stage_it, dsymutilFunc )
 
