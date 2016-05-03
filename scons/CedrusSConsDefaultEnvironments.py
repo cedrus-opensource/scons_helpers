@@ -43,7 +43,7 @@ def _get_mac_global_defaults( env ):
         plain_old_c_flags = [ '-isysroot/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk', '-mmacosx-version-min=10.7' ]
 
         # after we ship 5.0.5 we can remove this next 'if' and just ALWAYS do 10.9 sdk:
-        if platform.mac_ver()[0].startswith('10.10'):
+        if platform.mac_ver()[0].startswith('10.10') or platform.mac_ver()[0].startswith('10.11'):
             plain_old_c_flags = [ '-isysroot/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk',
                                   '-mmacosx-version-min=10.9' ]
 
