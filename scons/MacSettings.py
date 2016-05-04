@@ -65,7 +65,7 @@ class MacSettings:
 
         elif self.wxEnvVar == 'WXWIN_29':
             # after we ship 5.0.5 we can remove this next 'if' and just ALWAYS do 10.9 sdk:
-            if not platform.mac_ver()[0].startswith('10.10') or platform.mac_ver()[0].startswith('10.11'):
+            if not ( platform.mac_ver()[0].startswith('10.10') or platform.mac_ver()[0].startswith('10.11') ):
                 return [
                     '-F$OBJ_ROOT',
                     '-isysroot/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk',
@@ -96,7 +96,7 @@ class MacSettings:
 
         elif self.wxEnvVar == 'WXWIN_29':
             # after we ship 5.0.5 we can remove this next 'if' and just ALWAYS do 10.9 sdk:
-            if not platform.mac_ver()[0].startswith('10.10') or platform.mac_ver()[0].startswith('10.11'):
+            if not ( platform.mac_ver()[0].startswith('10.10') or platform.mac_ver()[0].startswith('10.11') ):
                 return UnixCompilerFlags.unix_common_cxxflags + [
                     '-Wmost',
                     '-Wshorten-64-to-32',
@@ -137,7 +137,7 @@ class MacSettings:
         ]
 
         # after we ship 5.0.5 we can remove this next 'if' and just ALWAYS do this:
-        if platform.mac_ver()[0].startswith('10.10') or platform.mac_ver()[0].startswith('10.11'):
+        if ( platform.mac_ver()[0].startswith('10.10') or platform.mac_ver()[0].startswith('10.11') ):
             # if you want (via homebrew) to get GDB, then you need this flag so breakpoints work in gdb:
             flags += [ '-fstandalone-debug' ]
 
@@ -147,7 +147,7 @@ class MacSettings:
     def getReleaseCxxFlags(self):
 
         # after we ship 5.0.5 we can remove this next 'if' and just ALWAYS do 10.9 sdk:
-        if not platform.mac_ver()[0].startswith('10.10') or platform.mac_ver()[0].startswith('10.11'):
+        if not ( platform.mac_ver()[0].startswith('10.10') or platform.mac_ver()[0].startswith('10.11') ):
 
             flags = [
                 '-Os',
@@ -222,7 +222,7 @@ class MacSettings:
         ]
 
         # after we ship 5.0.5 we can remove this next 'if' and just ALWAYS do this:
-        if platform.mac_ver()[0].startswith('10.10') or platform.mac_ver()[0].startswith('10.11'):
+        if ( platform.mac_ver()[0].startswith('10.10') or platform.mac_ver()[0].startswith('10.11') ):
             # the '-fstandalone' is to help out GDB. but using the debug sym flags in the linker
             # is now ESSENTIAL so that our dSYM symbols work (in lldb! in Xcode! not just for gdb)
             flags += [ '-g', '-fstandalone-debug' ]
