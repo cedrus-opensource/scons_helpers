@@ -409,6 +409,8 @@ def PerformCedrusSConsGlobalGeneralStartup( no_longer_used='' ):
 
     env.Append( SHLIBVERSION = '' )
 
+    env.Append( SHLIBNOVERSIONSYMLINKS = '' )
+
     #------ END SECTION:     ** CXXCOMSTR **     -----------------------------------------
     #-------------------------------------------------------------------------------------
 
