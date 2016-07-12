@@ -102,38 +102,38 @@ class CedrusBoostSettingsMac:
         env.AppendUnique( LIBS = [library] )
 
     def need_boost_system(self, env):
-        self.add_library(env, 'boost_system-clang-darwin-mt-'+env['BOOST_VERSION'])
+        self.add_library(env, 'boost_system-clang-darwin42-mt-'+env['BOOST_VERSION'])
 
     def need_boost_chrono(self, env):
-        self.add_library(env, 'boost_chrono-clang-darwin-mt-'+env['BOOST_VERSION'])
+        self.add_library(env, 'boost_chrono-clang-darwin42-mt-'+env['BOOST_VERSION'])
 
     def need_boost_serialization(self, env):
-        self.add_library(env, 'boost_serialization-clang-darwin-mt-'+env['BOOST_VERSION'])
-        self.add_library(env, 'boost_wserialization-clang-darwin-mt-'+env['BOOST_VERSION'])
+        self.add_library(env, 'boost_serialization-clang-darwin42-mt-'+env['BOOST_VERSION'])
+        self.add_library(env, 'boost_wserialization-clang-darwin42-mt-'+env['BOOST_VERSION'])
 
 
     def need_boost_thread(self, env):
-        self.add_library(env, 'boost_thread-clang-darwin-mt-'+env['BOOST_VERSION'])
+        self.add_library(env, 'boost_thread-clang-darwin42-mt-'+env['BOOST_VERSION'])
 
 
     def need_boost_date_time(self, env):
-        self.add_library(env, 'boost_date_time-clang-darwin-mt-'+env['BOOST_VERSION'])
+        self.add_library(env, 'boost_date_time-clang-darwin42-mt-'+env['BOOST_VERSION'])
 
 
     def need_boost_filesystem(self, env):
-        self.add_library(env, 'boost_filesystem-clang-darwin-mt-'+env['BOOST_VERSION'])
+        self.add_library(env, 'boost_filesystem-clang-darwin42-mt-'+env['BOOST_VERSION'])
 
 
     def need_boost_python(self, env):
-        self.add_library(env, 'boost_python-clang-darwin-mt-'+env['BOOST_VERSION'])
+        self.add_library(env, 'boost_python-clang-darwin42-mt-'+env['BOOST_VERSION'])
 
 
     def need_boost_regex(self, env):
-        self.add_library(env, 'boost_regex-clang-darwin-mt-'+env['BOOST_VERSION'])
+        self.add_library(env, 'boost_regex-clang-darwin42-mt-'+env['BOOST_VERSION'])
 
 
     def need_boost_signals(self, env):
-        self.add_library(env, 'boost_signals-clang-darwin-mt-'+env['BOOST_VERSION'])
+        self.add_library(env, 'boost_signals-clang-darwin42-mt-'+env['BOOST_VERSION'])
 
     def need_boost_math(self, env):
         pass
