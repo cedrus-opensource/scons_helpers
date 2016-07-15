@@ -488,7 +488,9 @@ def DeclareSConsComplexGUIAppProgramBuild(
 
         total_nodes_for_app += env.Install( mac_app_bundle_contents_dir , './PkgInfo' )
 
+        env.SetDefault(EXTRA_LIBS = []) # on the off chance there isn't one
         libs_to_copy = set( env['LIBS'] )
+        libs_to_copy = libs_to_copy | set( env['EXTRA_LIBS'] )
         libs_to_copy = libs_to_copy.difference( set( env[ 'CEDRUS_NON_COPYABLE_LIBS' ] ) )
 
         # env['SHLIBPREFIX'] did not work here, for some reason. but
