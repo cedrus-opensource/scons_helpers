@@ -10,6 +10,8 @@ class MacSettings:
             self.wxEnvVar = 'WXWIN_SL'
         elif wxVersion >= '2.9':
             self.wxEnvVar = 'WXWIN_29'
+        elif wxVersion == 'NONE':
+            self.wxEnvVar = 'NONE'
         else:
             print "Unsupported wxWidgets version!"
             Exit(1)
@@ -43,6 +45,16 @@ class MacSettings:
                 'OS_MACOSX=OS_MACOSX',
             ]
 
+        elif self.wxEnvVar == 'NONE':
+            return [
+                '__DARWIN__',
+                '_FILE_OFFSET_BITS=64',
+                '_LARGE_FILES',
+                'MAC_OS_X_VERSION_MIN_REQUIRED=1070',
+                'MACOSX_DEPLOYMENT_TARGET=10.7',
+                'OS_MACOSX=OS_MACOSX',
+            ]
+
     def getCommonLibs(self):
         return [
         ]
@@ -63,7 +75,7 @@ class MacSettings:
                 '-mmacosx-version-min=10.4',
                 ]
 
-        elif self.wxEnvVar == 'WXWIN_29':
+        elif self.wxEnvVar == 'WXWIN_29' or self.wxEnvVar == 'NONE':
             # after we ship 5.0.5 we can remove this next 'if' and just ALWAYS do 10.9 sdk:
             if not ( platform.mac_ver()[0].startswith('10.10') or platform.mac_ver()[0].startswith('10.11') ):
                 return [
@@ -94,7 +106,7 @@ class MacSettings:
                 '-fstrict-aliasing',
                 ]
 
-        elif self.wxEnvVar == 'WXWIN_29':
+        elif self.wxEnvVar == 'WXWIN_29' or self.wxEnvVar == 'NONE':
             # after we ship 5.0.5 we can remove this next 'if' and just ALWAYS do 10.9 sdk:
             if not ( platform.mac_ver()[0].startswith('10.10') or platform.mac_ver()[0].startswith('10.11') ):
                 return UnixCompilerFlags.unix_common_cxxflags + [
@@ -194,7 +206,7 @@ class MacSettings:
             '_DEBUG'
         ]
 
-        if self.wxEnvVar == 'WXWIN_29':
+        if self.wxEnvVar == 'WXWIN_29' or self.wxEnvVar == 'NONE':
             result += [ 'wxDEBUG_LEVEL=2' ]
 
         return result
@@ -202,7 +214,7 @@ class MacSettings:
     def getReleaseDefines(self):
         result = []
 
-        if self.wxEnvVar == 'WXWIN_29':
+        if self.wxEnvVar == 'WXWIN_29' or self.wxEnvVar == 'NONE':
             result += [ 'wxDEBUG_LEVEL=0' ]
 
         return result
