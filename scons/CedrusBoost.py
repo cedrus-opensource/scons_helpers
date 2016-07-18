@@ -139,13 +139,21 @@ class CedrusBoostSettingsMac:
         pass
 
     def publish_all_libs_to_staging(self, env):
-        # publish boost libraries
+        # We are still deeply menaced by the specter of this being a helper that can be
+        # used by multiple parts of a build. We're keeping track of which boost libs
+        # we've added so far to avoid breaking SCons by trying to install two identical
+        # libs from different sources into the same target.
+        env.SetDefault(STAGED_BOOST_LIBS = [])
+        staged_libs = env['STAGED_BOOST_LIBS']
+
         boost_libs = env.Glob( os.getenv('BOOST')+'/lib/*' + env['BOOST_VERSION'] + '*.dylib' )
 
         results = []
 
         for lib in boost_libs:
-            results += env.Install( '$STAGING_DIR', lib )
+            if lib.name not in staged_libs:
+                env.AppendUnique(STAGED_BOOST_LIBS = lib.name)
+                results += env.Install( '$STAGING_DIR', lib )
 
         return results
 
