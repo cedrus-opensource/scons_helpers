@@ -30,11 +30,12 @@ def _get_mac_global_defaults( env ):
 
     # Note: at one point I changed this to 'AppendUnique', and for some reason
     # that caused the string to appear in the build command-line with DOUBLE-QUOTES AROUND
-    # the WHOLE thing!!  Like this:  " -install_name @loader_path/libCedrusThreads.dylib "
+    # the WHOLE thing!!  Like this:  " -install_name @rpath/libCedrusThreads.dylib "
     #
     # Then that caused gcc to think that whole string was an input
     # file, and we got the error "No such file or directory"
-    env.Append( SHLINKFLAGS = ' -install_name @loader_path/${TARGET.file} ' )
+    env.Append( SHLINKFLAGS = ' -install_name @rpath/${TARGET.file} ' )
+    env.Append( LINKFLAGS = '-Wl -rpath @executable_path/ -rpath @loader_path/' )
 
     # believe it or not, we need flags for 'plain old C' code!  it's for sqlite (written in C), in DataViewer
     plain_old_c_flags = [ '-isysroot/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk', '-mmacosx-version-min=10.7' ]
