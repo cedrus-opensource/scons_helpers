@@ -16,7 +16,6 @@ class CedrusQtSettings:
     def publish_all_libs_to_staging(self):
         return self.impl.publish_all_libs_to_staging(self.env)
 
-
     def need_qt_basics(self):
         self.impl.need_qt_basics(self.env)
 
@@ -35,7 +34,6 @@ class CedrusQtSettings:
     def need_qt_xml(self):
         self.impl.need_qt_xml(self.env)
 
-
     def need_all(self):
         # qt python is purposely excluded
         self.need_qt_basics()
@@ -45,33 +43,31 @@ class CedrusQtSettings:
         self.need_qt_test()
         self.need_qt_xml()
 
-
 class CedrusQtSettingsMac:
     def __init__(self, env, project_app_name):
 
         self.app_name = project_app_name
 
-
     def _use_qt_include_paths(self, env):
 
         # macosx/include  QT_BINARIES_REPO
         cxxflags = [
-            '-isystem'+os.getenv('QT_BINARIES_REPO','')+'/macosx/include/',
-            '-isystem'+os.getenv('QT_BINARIES_REPO','')+'/macosx/include/QtCore/',
-            '-isystem'+os.getenv('QT_BINARIES_REPO','')+'/macosx/include/QtGui/',
-            '-isystem'+os.getenv('QT_BINARIES_REPO','')+'/macosx/include/QtOpenGL/',
-            '-isystem'+os.getenv('QT_BINARIES_REPO','')+'/macosx/include/QtOpenGLExtensions/',
-            '-isystem'+os.getenv('QT_BINARIES_REPO','')+'/macosx/include/QtPlatformSupport/',
-            '-isystem'+os.getenv('QT_BINARIES_REPO','')+'/macosx/include/QtPrintSupport/',
-            '-isystem'+os.getenv('QT_BINARIES_REPO','')+'/macosx/include/QtSensors/',
-            '-isystem'+os.getenv('QT_BINARIES_REPO','')+'/macosx/include/QtSvg/',
-            '-isystem'+os.getenv('QT_BINARIES_REPO','')+'/macosx/include/QtTest/',
-            '-isystem'+os.getenv('QT_BINARIES_REPO','')+'/macosx/include/QtWidgets/',
-            '-isystem'+os.getenv('QT_BINARIES_REPO','')+'/macosx/include/QtXml/',
+            '-isystem' + env['QT_DIR'] + '/macosx/include/',
+            '-isystem' + env['QT_DIR'] + '/macosx/include/QtCore/',
+            '-isystem' + env['QT_DIR'] + '/macosx/include/QtGui/',
+            '-isystem' + env['QT_DIR'] + '/macosx/include/QtOpenGL/',
+            '-isystem' + env['QT_DIR'] + '/macosx/include/QtOpenGLExtensions/',
+            '-isystem' + env['QT_DIR'] + '/macosx/include/QtPlatformSupport/',
+            '-isystem' + env['QT_DIR'] + '/macosx/include/QtPrintSupport/',
+            '-isystem' + env['QT_DIR'] + '/macosx/include/QtSensors/',
+            '-isystem' + env['QT_DIR'] + '/macosx/include/QtSvg/',
+            '-isystem' + env['QT_DIR'] + '/macosx/include/QtTest/',
+            '-isystem' + env['QT_DIR'] + '/macosx/include/QtWidgets/',
+            '-isystem' + env['QT_DIR'] + '/macosx/include/QtXml/',
             ]
 
         lib_path = [
-            os.getenv('QT_BINARIES_REPO','')+'/macosx/final-lib/',
+            env['QT_DIR']+'/macosx/final-lib/',
             ]
 
         env.AppendUnique( CXXFLAGS = cxxflags,
@@ -80,7 +76,6 @@ class CedrusQtSettingsMac:
 
         if env['BUILD_TYPE'] == 'opt':
             env.AppendUnique( CPPDEFINES = ['QT_NO_DEBUG_OUTPUT'] )
-
 
     def add_library(self, env, library, num_suffix = '.5.1.1' ):
 
@@ -93,7 +88,6 @@ class CedrusQtSettingsMac:
             library += '_debug' + num_suffix
 
         env.AppendUnique( LIBS = [library] )
-
 
     def _copy_plugin_but_no_linker(self, env, single_lib):
 
@@ -112,7 +106,6 @@ class CedrusQtSettingsMac:
 
         # without the next line, SCons was just ignoring my 'env.Install' directive on these libraries
         env.Depends( self.app_name, qt_plugins )
-
 
     def _add_base_plugins(self,env):
         self._copy_plugin_but_no_linker(env, 'cocoaprintersupport')
@@ -152,7 +145,6 @@ class CedrusQtSettingsMac:
     def need_qt_xml(self,env):
         self.add_library(env, 'Qt5Xml')
 
-
     def publish_all_libs_to_staging(self, env):
 
         want_debug_libs = False
@@ -160,7 +152,7 @@ class CedrusQtSettingsMac:
         if env['BUILD_TYPE'] == 'dbg':
             want_debug_libs = True
 
-        qt_libs = env.Glob( os.getenv('QT_BINARIES_REPO','')+'/macosx/final-lib/*dylib' )
+        qt_libs = env.Glob( env['QT_DIR'] + '/macosx/final-lib/*dylib' )
 
         results = []
 
@@ -173,33 +165,30 @@ class CedrusQtSettingsMac:
 
         return results
 
-
-
 class CedrusQtSettingsWin32:
     def __init__(self, env, project_app_name):
 
         self.app_name = project_app_name
 
-
     def _use_qt_include_paths(self, env):
 
         cxxflags = [
-            '/I'+os.getenv('QT_BINARIES_REPO','')+'/win32/include/',
-            '/I'+os.getenv('QT_BINARIES_REPO','')+'/win32/include/QtANGLE/', # this replaces QtOpenGL on windows
-            '/I'+os.getenv('QT_BINARIES_REPO','')+'/win32/include/QtCore/',
-            '/I'+os.getenv('QT_BINARIES_REPO','')+'/win32/include/QtGui/',
-            #'/I'+os.getenv('QT_BINARIES_REPO','')+'/win32/include/QtOpenGL/',  # no! we use QtANGLE instead, at least for now
-            '/I'+os.getenv('QT_BINARIES_REPO','')+'/win32/include/QtPlatformSupport/',
-            '/I'+os.getenv('QT_BINARIES_REPO','')+'/win32/include/QtPrintSupport/',
-            '/I'+os.getenv('QT_BINARIES_REPO','')+'/win32/include/QtSensors/',
-            '/I'+os.getenv('QT_BINARIES_REPO','')+'/win32/include/QtSvg/',
-            '/I'+os.getenv('QT_BINARIES_REPO','')+'/win32/include/QtTest/',
-            '/I'+os.getenv('QT_BINARIES_REPO','')+'/win32/include/QtWidgets/',
-            '/I'+os.getenv('QT_BINARIES_REPO','')+'/win32/include/QtXml/',
+            '/I' + env['QT_DIR'] + '/win32/include/',
+            '/I' + env['QT_DIR'] + '/win32/include/QtANGLE/', # this replaces QtOpenGL on windows
+            '/I' + env['QT_DIR'] + '/win32/include/QtCore/',
+            '/I' + env['QT_DIR'] + '/win32/include/QtGui/',
+            #'/I' + env['QT_DIR'] + '/win32/include/QtOpenGL/',  # no! we use QtANGLE instead, at least for now
+            '/I' + env['QT_DIR'] + '/win32/include/QtPlatformSupport/',
+            '/I' + env['QT_DIR'] + '/win32/include/QtPrintSupport/',
+            '/I' + env['QT_DIR'] + '/win32/include/QtSensors/',
+            '/I' + env['QT_DIR'] + '/win32/include/QtSvg/',
+            '/I' + env['QT_DIR'] + '/win32/include/QtTest/',
+            '/I' + env['QT_DIR'] + '/win32/include/QtWidgets/',
+            '/I' + env['QT_DIR'] + '/win32/include/QtXml/',
             ]
 
         lib_path = [
-            os.getenv('QT_BINARIES_REPO','')+'/win32/final-lib/',
+            env['QT_DIR'] + '/win32/final-lib/',
             ]
 
         env.AppendUnique( CXXFLAGS = cxxflags,
@@ -208,7 +197,6 @@ class CedrusQtSettingsWin32:
 
         if env['BUILD_TYPE'] == 'opt':
             env.AppendUnique( CPPDEFINES = ['QT_NO_DEBUG_OUTPUT'] )
-
 
     def add_library(self, env, library, num_suffix = '' ):
 
@@ -222,12 +210,9 @@ class CedrusQtSettingsWin32:
 
         env.AppendUnique( LIBS = [library] )
 
-
     def _copy_plugin_but_no_linker(self, env, single_lib):
 
         pass # we seem to not need the _copy_plugin_but_no_linker. publish_all_libs_to_staging is good enough on win32
-
-
 
     def _add_base_plugins(self,env):
         self._copy_plugin_but_no_linker(env, 'windowsprintersupport')
@@ -273,16 +258,12 @@ class CedrusQtSettingsWin32:
     def need_qt_xml(self,env):
         self.add_library(env, 'Qt5Xml')
 
-
     def publish_all_libs_to_staging(self, env):
 
-        want_debug_libs = False
+        want_debug_libs = env['BUILD_TYPE'] == 'dbg'
 
-        if env['BUILD_TYPE'] == 'dbg':
-            want_debug_libs = True
-
-        qt_libs = env.Glob( os.getenv('QT_BINARIES_REPO','')+'/win32/final-lib/*dll' )
-        qt_libs += env.Glob( os.getenv('QT_BINARIES_REPO','')+'/win32/final-lib/*pdb' )
+        qt_libs = env.Glob( env['QT_DIR'] + '/bin/*dll' )
+        qt_libs += env.Glob( env['QT_DIR'] + '/bin/*pdb' )
 
         results = []
 
@@ -293,6 +274,4 @@ class CedrusQtSettingsWin32:
                 results += env.Install( '$STAGING_DIR', lib )
 
         return results
-
-
 

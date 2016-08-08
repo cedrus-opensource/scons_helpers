@@ -2,16 +2,8 @@ import os
 from SCons.Script import *
 
 class WindowsSettings:
-    def __init__(self, wxVersion):
-#        self.env = env
-        self.wxVersion = wxVersion
-        if wxVersion == '2.8':
-            self.wxEnvVar = 'WXWIN_SL'
-        else:
-            self.wxEnvVar = 'WXWIN_29'
-
-        #env['CCPDBFLAGS'] = ['/Z7']
-        #env['PCHPDBFLAGS'] = []
+    def __init__(self, env):
+        self.env = env
 
     def getCommonDefines(self):
         return [
@@ -21,10 +13,11 @@ class WindowsSettings:
             'BOOST_ALL_DYN_LINK',
             'BOOST_REGEX_DYN_LINK',
             'BOOST_LIB_DIAGNOSTIC',
-            '_VC80_UPGRADE=0x710',
             'UNICODE',
             'WXUSINGDLL',
             'wxUSE_SERVICE_DISCOVERY=1',
+             '_ALLOW_RTCc_IN_STL',
+             '_ATL_DISABLE_NOTHROW_NEW' 
         ]
 
     def getCommonLibs(self):
@@ -69,7 +62,6 @@ class WindowsSettings:
 
         return flags
 
-
     def getCommonCxxFlags(self):
         flags = [
             '/EHs', # catch C++ exceptions AND assume that extern C functions may also throw an exception
@@ -84,8 +76,8 @@ class WindowsSettings:
             '/wd4503',  # decorated name length exceeded, name was truncated
             '/wd4481',  # nonstandard extension used: override specifier 'override'
             '/wd4996',  # '____' was declared deprecated
-            '/Zm323',
-            #'/showIncludes',
+            '/Zm370'
+           #'/showIncludes'
         ]
 
         return flags
@@ -111,7 +103,7 @@ class WindowsSettings:
             '__WXDEBUG__',
         ]
 
-        if self.wxEnvVar == 'WXWIN_29':
+        if self.env['WX_VERSION'] == '2.9':
             result += [ 'wxDEBUG_LEVEL=2' ]
 
         return result
@@ -120,7 +112,7 @@ class WindowsSettings:
         result = [
         ]
 
-        if self.wxEnvVar == 'WXWIN_29':
+        if self.env['WX_VERSION'] == '2.9':
             result += [ 'wxDEBUG_LEVEL=0' ]
 
         return result

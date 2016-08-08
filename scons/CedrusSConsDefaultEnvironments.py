@@ -101,7 +101,7 @@ def _get_mac_release_defaults( env ):
 
 def _get_win_global_defaults( env ):
 
-    win = WindowsSettings.WindowsSettings( env['WX_VERSION'] )
+    win = WindowsSettings.WindowsSettings( env )
 
     env.AppendUnique(
         CPPDEFINES = win.getCommonDefines(),
@@ -120,7 +120,7 @@ def _get_win_debug_defaults( env ):
         BUILD_TYPE_DESCRIPTION = 'Windows Debug Build',
         )
 
-    win = WindowsSettings.WindowsSettings( env['WX_VERSION'] )
+    win = WindowsSettings.WindowsSettings( env )
 
     env.AppendUnique(
         CPPDEFINES= win.getDebugDefines(),
@@ -139,7 +139,7 @@ def _get_win_release_defaults( env ):
         BUILD_TYPE_DESCRIPTION = 'Windows Release Build',
         )
 
-    win = WindowsSettings.WindowsSettings( env['WX_VERSION'] )
+    win = WindowsSettings.WindowsSettings( env )
 
     env.AppendUnique(
         CPPDEFINES= win.getReleaseDefines(),
@@ -206,7 +206,6 @@ def _get_linux_release_defaults( env ):
 
     return env
 
-
 def GetDefaultSetupForCurrentSystemAndCommandLine( env ):
 
     build_mode = env.GetOption('build_mode')
@@ -251,8 +250,7 @@ def GetDefaultSetupForCurrentSystemAndCommandLine( env ):
 
     return env
 
-
-def PerformCedrusSConsGlobalGeneralStartup( no_longer_used='' ):
+def PerformCedrusSConsGlobalGeneralStartup( env_settings ):
 
     # ------- Handling Problems With Value Expansion  (catching omissions and FAILING EARLY)
     #
@@ -321,23 +319,30 @@ def PerformCedrusSConsGlobalGeneralStartup( no_longer_used='' ):
 
     if sys.platform == 'win32':
         # according to SCons documentation: you *must* set MSVC_VERSION in the env constructor
-        env = Environment( MSVC_VERSION='10.0' )
+        env = Environment( MSVC_VERSION=env_settings['MSVC_VERSION'] )
         print "Using Visual Studio Version " + env['MSVC_VERSION']
 
-        win_setting_for_vs100 = os.getenv('VS100COMNTOOLS')
-
-        if str(win_setting_for_vs100) == '':
-            win_vars_bat_path = 'C:\\Program Files (x86)\\Microsoft Visual Studio 10.0\\VC\\bin\\vcvars32.bat'
-            print 'Failed to read the expected environment variable VS100COMNTOOLS.'
-        else:
-            win_vars_bat_path = str(win_setting_for_vs100) + '\\..\\..\\VC\\bin\\vcvars32.bat'
-
+        win_setting_for_vs = ''
+        if env['MSVC_VERSION'] == '10.0':
+            win_setting_for_vs = os.getenv('VS100COMNTOOLS')
+        elif env['MSVC_VERSION'] == '14.0':
+            win_setting_for_vs = os.getenv('VS140COMNTOOLS')
+        else :
+            print 'Unsupported MSVC_VERSION.'
+            quit()
+        
+        if str(win_setting_for_vs) == '':
+            print 'Failed to read VS common tools environment variable for MS VC ' + env['MSVC_VERSION']
+            quit()
+        
+        win_vars_bat_path = str(win_setting_for_vs) + '\\..\\..\\VC\\bin\\vcvars32.bat'
+        
         # now it looks like both win7 *and* the vista machine are fixed if we use MSVC_USE_SCRIPT
         env = Environment(
-            MSVC_VERSION='10.0',
-            MSVC_USE_SCRIPT=win_vars_bat_path
+             MSVC_VERSION=env_settings['MSVC_VERSION'],
+             MSVC_USE_SCRIPT=win_vars_bat_path
             )
-
+        
         env['WINDOWS_INSERT_MANIFEST'] = True
 
         env['PDB'] = '${TARGET.base}.pdb'
@@ -464,7 +469,6 @@ def PerformCedrusSConsGlobalGeneralStartup( no_longer_used='' ):
 
     return env
 
-
 def _cedrus_declare_shared_pch(
     env,
     pch_name,
@@ -542,3 +546,4 @@ def DeclareBuildOfGenericCommonPCH_w_Qt( env ):
         'CedrusPCH_w_Qt.h',
         'CedrusPCH_w_Qt'
         )
+

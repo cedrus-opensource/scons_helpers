@@ -81,7 +81,6 @@ def NowIsDuringBusinessHoursWhenSomeoneCanReactToSomeHungTest():
 
     return result
 
-
 def _make_one_lambda_for_shared_lib():
     return lambda e, name, input : e.SharedLibrary( name, input )
 
@@ -398,7 +397,6 @@ def DeclareSConsGUIAppProgramBuild(
 
     return total_nodes_for_app
 
-
 def _make_a_mac_app_plist(
     app_name,
     info_string,
@@ -512,7 +510,6 @@ def DeclareSConsComplexGUIAppProgramBuild(
 
     return total_nodes_for_app
 
-
 def DeclareSConsProgramWithRunnableGoogleTests(
     env,
     project_target_name,
@@ -529,10 +526,10 @@ def DeclareSConsProgramWithRunnableGoogleTests(
     if platform.mac_ver()[0].startswith('10.7'):
         return
 
-    cpppath.append( str( os.getenv('GMOCK','')+'/include' ) )
-    cpppath.append( str( os.getenv('GTEST','')+'/include' ) )
-
-    if env['PLATFORM'] == 'win32':
+    if env['PLATFORM'] == 'darwin':
+        cpppath.append( str( os.getenv('GMOCK','') + '/include' ) )
+    elif env['PLATFORM'] == 'win32':
+        cpppath.append( str( env['GMOCK_DIR'] + '/include' ) )
         FromSwtoolkitFilterOut( env, CPPDEFINES = ['_WINDOWS'] )
         defines += [ '_CONSOLE' ]
 
@@ -576,7 +573,6 @@ def DeclareSConsProgramWithRunnableGoogleTests(
         env.Alias( str(project_target_name), run_the_test )
 
     return installed_executable
-
 
 def _ConfigureCedrusVersionNumbersForProjectsThatHaveDebs(
     env,
@@ -659,7 +655,6 @@ def _ConfigureCedrusVersionNumbersForProjectsThatHaveDebs(
 
     return [ version_summary_strings_in_deb_control_style, version_dictionary_by_deb_name ]
 
-
 def _convert_version_list_into_comma_string(
     version_list_full,
     current_deb_name
@@ -681,7 +676,6 @@ def _convert_version_list_into_comma_string(
         result += version_list[i]
 
     return result
-
 
 def DeclareDebPackage(
     env,
@@ -844,3 +838,4 @@ Description: %s
     env.Alias( 'all_deb_packages', make_deb_pkg )
 
     return make_deb_pkg
+

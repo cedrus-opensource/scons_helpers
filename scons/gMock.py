@@ -16,16 +16,19 @@ def need_gmock(env):
 
 def need_gmock_windows(env):
     # no need to publish. Statically linked
+
+    vs_ver = '2010'
+    if env['MSVC_VERSION'] == '14.0' :
+        vs_ver = '2015'
+
     if env['BUILD_TYPE'] == 'opt':
-        if True:
-            lib_path = [ os.getenv('GMOCK','')+'/lib/Release2010']
+        lib_path = [ env['GMOCK_DIR'] + '/Release' + vs_ver]
         linked_libraries = [ 'gmock', 'gtest' ]
     else:
-        if True:
-            lib_path = [ os.getenv('GMOCK','')+'/lib/Debug2010' ]
+        lib_path = [ env['GMOCK_DIR'] + '/Debug' + vs_ver ]
         linked_libraries = [ 'gmock', 'gtestd' ]
 
-    include_path = [ '/I'+os.getenv('GMOCK','')+'/include/' ]
+    include_path = [ '/I' + env['GMOCK_DIR'] + '/win32/include' ]
 
     cppdefines = [
         'GTEST_USE_OWN_TR1_TUPLE=0',
@@ -36,12 +39,11 @@ def need_gmock_windows(env):
                 LIBS = linked_libraries,
                 CPPDEFINES = cppdefines )
 
-
 def need_gmock_mac(env):
 
-    include_path = [ '-isystem'+os.getenv('GMOCK', '')+'/include', ]
+    include_path = [ '-isystem' + env['GMOCK_DIR'] + '/include', ]
 
-    lib_path = [ os.getenv('GMOCK', '')+'/lib', ]
+    lib_path = [ env['GMOCK_DIR'] + '/lib', ]
     linked_libs = [ 'gtest.0' ]
 
     env.AppendUnique( CXXFLAGS = include_path,
@@ -51,8 +53,8 @@ def need_gmock_mac(env):
 
 def publish_all_libs_to_staging(env):
     # publish gmock libraries
-    gmock_libs = env.Glob( os.getenv('GMOCK', '')+'/lib/*.dylib')
-    gmock_libs += env.Glob( os.getenv('GMOCK', '')+'/lib/*.a')
+    gmock_libs = env.Glob( env['GMOCK_DIR'] + '/lib/*.dylib')
+    gmock_libs += env.Glob( env['GMOCK_DIR'] + '/lib/*.a')
 
     results = []
 
@@ -71,6 +73,4 @@ def need_gmock_linux(env):
     env.AppendUnique( LIBS = linked_libs,
                       LIBPATH = lib_path,
                 )
-
-
 
