@@ -25,7 +25,27 @@ class CedrusBoostSettings:
         self.env = env
 
     def publish_all_libs_to_staging(self):
-        return self.impl.publish_all_libs_to_staging(self.env)
+        # We are still deeply menaced by the specter of this being a helper that can be
+        # used by multiple parts of a build. We're keeping track of which boost libs
+        # we've added so far to avoid breaking SCons by trying to install two identical
+        # libs from different sources into the same target.
+        lib_extension = "*.dll"
+        if sys.platform == 'darwin':
+            lib_extension = "*.dylib"
+
+        self.env.SetDefault(STAGED_BOOST_LIBS = [])
+        staged_libs = self.env['STAGED_BOOST_LIBS']
+
+        boost_libs = self.env.Glob( self.env['BOOST_DIR'] + '/lib/*' + self.env['BOOST_VERSION'] + lib_extension )
+
+        results = []
+
+        for lib in boost_libs:
+            if lib.name not in staged_libs:
+                self.env.AppendUnique(STAGED_BOOST_LIBS = lib.name)
+                results += self.env.Install( '$STAGING_DIR', lib )
+
+        return results
 
     def need_boost_system(self):
         self.impl.need_boost_system(self.env)
@@ -86,8 +106,7 @@ class CedrusBoostSettingsMac:
             os.getenv('BOOST','')+'/lib/',
             ]
 
-        env.AppendUnique( CXXFLAGS = cxxflags,
-                    LIBPATH = lib_path, )
+        env.AppendUnique( CXXFLAGS = cxxflags, LIBPATH = lib_path, )
 
         if env['BOOST_VERSION'] != '1_42':
             # in retrospect, this flag is more like 'BOOST=MODERN' or BOOST=MORE_RECENT_THAN_1_42.
@@ -129,25 +148,6 @@ class CedrusBoostSettingsMac:
     def need_boost_math(self, env):
         pass
 
-    def publish_all_libs_to_staging(self, env):
-        # We are still deeply menaced by the specter of this being a helper that can be
-        # used by multiple parts of a build. We're keeping track of which boost libs
-        # we've added so far to avoid breaking SCons by trying to install two identical
-        # libs from different sources into the same target.
-        env.SetDefault(STAGED_BOOST_LIBS = [])
-        staged_libs = env['STAGED_BOOST_LIBS']
-
-        boost_libs = env.Glob( os.getenv('BOOST')+'/lib/*' + env['BOOST_VERSION'] + '*.dylib' )
-
-        results = []
-
-        for lib in boost_libs:
-            if lib.name not in staged_libs:
-                env.AppendUnique(STAGED_BOOST_LIBS = lib.name)
-                results += env.Install( '$STAGING_DIR', lib )
-
-        return results
-
 class CedrusBoostSettingsWindowsRelease:
     def __init__(self,env):
 
@@ -164,20 +164,7 @@ class CedrusBoostSettingsWindowsRelease:
         if env['MSVC_VERSION'] == '14.0' :
             self.vc_ver = 'vc140' 
 
-        env.AppendUnique( CXXFLAGS = include_path,
-                    LIBPATH = lib_path )
-
-    def publish_all_libs_to_staging(self, env):
-        boost_libs = env.Glob( env['BOOST_DIR']+'/lib/*' + self.vc_ver + '*.dll' )
-
-        results = []
-
-        for lib in boost_libs:
-            name_parts = os.path.splitext(lib.name)
-            lib_basename = name_parts[0]
-            results += env.Install( '$STAGING_DIR', lib )
-
-        return results
+        env.AppendUnique( CXXFLAGS = include_path, LIBPATH = lib_path )
 
     def add_library(self, env, library):
         env.AppendUnique( LIBS = [library] )
@@ -230,24 +217,11 @@ class CedrusBoostSettingsWindowsDebug:
             env['BOOST_DIR'] + '/lib/',
             ]
 
-        env.AppendUnique( CXXFLAGS = include_path,
-                    LIBPATH = lib_path )
+        env.AppendUnique( CXXFLAGS = include_path, LIBPATH = lib_path )
 
         self.vc_ver = 'vc100'    
         if env['MSVC_VERSION'] == '14.0' :
             self.vc_ver = 'vc140' 
-
-    def publish_all_libs_to_staging(self, env):
-        boost_libs = env.Glob( env['BOOST_DIR']+'/lib/*' + self.vc_ver + '*.dll' )
-
-        results = []
-
-        for lib in boost_libs:
-            name_parts = os.path.splitext(lib.name)
-            lib_basename = name_parts[0]
-            results += env.Install( '$STAGING_DIR', lib )
-
-        return results
 
     def add_library(self, env, library):
         env.AppendUnique( LIBS = [library] )
@@ -300,11 +274,7 @@ class CedrusBoostSettingsLinux:
         lib_path = [
             ]
 
-        env.AppendUnique( CXXFLAGS = cxxflags,
-                    LIBPATH = lib_path, )
-
-    def publish_all_libs_to_staging(self, env):
-        return []
+        env.AppendUnique( CXXFLAGS = cxxflags, LIBPATH = lib_path, )
 
     def need_boost_system(self, env):
         libname = 'boost_system'            #-gcc43-mt-'+env['BOOST_VERSION']  # see note about lucid/saucy above
@@ -345,4 +315,3 @@ class CedrusBoostSettingsLinux:
 
     def need_boost_math(self, env):
         pass
-
