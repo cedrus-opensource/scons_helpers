@@ -317,9 +317,11 @@ def PerformCedrusSConsGlobalGeneralStartup( env_settings ):
     else:
         print 'Force retest == FALSE'
 
+    env = Environment( MSVC_VERSION=env_settings['MSVC_VERSION'] )
+
     if sys.platform == 'win32':
         # according to SCons documentation: you *must* set MSVC_VERSION in the env constructor
-        env = Environment( MSVC_VERSION=env_settings['MSVC_VERSION'] )
+
         print "Using Visual Studio Version " + env['MSVC_VERSION']
 
         win_setting_for_vs = ''
@@ -330,33 +332,25 @@ def PerformCedrusSConsGlobalGeneralStartup( env_settings ):
         else :
             print 'Unsupported MSVC_VERSION.'
             quit()
-        
+
         if str(win_setting_for_vs) == '':
             print 'Failed to read VS common tools environment variable for MS VC ' + env['MSVC_VERSION']
             quit()
-        
+
         win_vars_bat_path = str(win_setting_for_vs) + '\\..\\..\\VC\\bin\\vcvars32.bat'
-        
+
         # now it looks like both win7 *and* the vista machine are fixed if we use MSVC_USE_SCRIPT
         env = Environment(
              MSVC_VERSION=env_settings['MSVC_VERSION'],
              MSVC_USE_SCRIPT=win_vars_bat_path
             )
-        
+
         env['WINDOWS_INSERT_MANIFEST'] = True
 
         env['PDB'] = '${TARGET.base}.pdb'
 
         env['LINKCOM'] = [env['LINKCOM'], 'mt.exe -nologo -manifest ${TARGET}.manifest -outputresource:$TARGET;1']
         env['SHLINKCOM'] = [env['SHLINKCOM'], 'mt.exe -nologo -manifest ${TARGET}.manifest -outputresource:$TARGET;2']
-
-    else:
-        env = Environment()
-
-    # explicitly pull these values from the enclosing environment:
-    env['BOOST_VERSION'] = os.getenv('BOOST_VERSION','')
-    # explicitly pull these values from the enclosing environment:
-    env['WX_VERSION'] = os.getenv('WX_VERSION','')
 
     env.SetOption('num_jobs', int(os.getenv('NUM_CPU',4))  )
     print "Running with -j", env.GetOption('num_jobs')

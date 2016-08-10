@@ -526,10 +526,9 @@ def DeclareSConsProgramWithRunnableGoogleTests(
     if platform.mac_ver()[0].startswith('10.7'):
         return
 
-    if env['PLATFORM'] == 'darwin':
-        cpppath.append( str( os.getenv('GMOCK','') + '/include' ) )
-    elif env['PLATFORM'] == 'win32':
-        cpppath.append( str( env['GMOCK_DIR'] + '/include' ) )
+    cpppath.append( str( env['GMOCK_DIR'] + '/include' ) )
+
+    if env['PLATFORM'] == 'win32':
         FromSwtoolkitFilterOut( env, CPPDEFINES = ['_WINDOWS'] )
         defines += [ '_CONSOLE' ]
 

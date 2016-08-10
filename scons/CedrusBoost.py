@@ -5,10 +5,7 @@ import platform
 class CedrusBoostSettings:
     def __init__(self, env):
         if sys.platform == 'win32':
-            if env['BUILD_TYPE'] == 'opt':
-                self.impl = CedrusBoostSettingsWindowsRelease(env)
-            if env['BUILD_TYPE'] == 'dbg':
-                self.impl = CedrusBoostSettingsWindowsDebug(env)
+             self.impl = CedrusBoostSettingsWindows(env)
         elif sys.platform == 'linux2':
             self.impl = CedrusBoostSettingsLinux(env)
         elif sys.platform == 'darwin':
@@ -91,20 +88,13 @@ class CedrusBoostSettings:
 
 class CedrusBoostSettingsMac:
     def __init__(self, env):
-
         # add boost CXX flags
         if not platform.mac_ver()[0].startswith('10.4'):
-            cxxflags = [
-                '-isystem'+os.getenv('BOOST','')+'/include/boost-'+env['BOOST_VERSION']+'/',
-            ]
+            cxxflags = [ '-isystem' + env['BOOST_DIR'] + '/include' ]
         else:
-            cxxflags = [
-                '-I'+os.getenv('BOOST','')+'/include/boost-'+env['BOOST_VERSION']+'/',
-            ]
+            cxxflags = [ '-I' + env['BOOST_DIR'] + '/include' ]
 
-        lib_path = [
-            os.getenv('BOOST','')+'/lib/',
-            ]
+        lib_path = [ env['BOOST_DIR'] + '/lib/' ]
 
         env.AppendUnique( CXXFLAGS = cxxflags, LIBPATH = lib_path, )
 
@@ -148,131 +138,66 @@ class CedrusBoostSettingsMac:
     def need_boost_math(self, env):
         pass
 
-class CedrusBoostSettingsWindowsRelease:
-    def __init__(self,env):
-
-        # add boost to CXXflags
-        include_path = [
-            '/I' + env['BOOST_DIR'] + '/include',
-            ]
-
-        lib_path = [
-            env['BOOST_DIR'] + '/lib/',
-            ]
-
-        self.vc_ver = 'vc100'    
-        if env['MSVC_VERSION'] == '14.0' :
-            self.vc_ver = 'vc140' 
-
-        env.AppendUnique( CXXFLAGS = include_path, LIBPATH = lib_path )
-
-    def add_library(self, env, library):
-        env.AppendUnique( LIBS = [library] )
-
-    def need_boost_system(self, env):
-        self.add_library(env, 'boost_system-' + self.vc_ver + '-mt-' + env['BOOST_VERSION'])
-
-    def need_boost_chrono(self, env):
-        self.add_library(env, 'boost_chrono-' + self.vc_ver + '-mt-'+env['BOOST_VERSION'])
-
-    def need_boost_serialization(self, env):
-        self.add_library(env, 'boost_serialization-' + self.vc_ver + '-mt-'+env['BOOST_VERSION'])
-        self.add_library(env, 'boost_wserialization-' + self.vc_ver + '-mt-'+env['BOOST_VERSION'])
-
-    def need_boost_thread(self, env):
-        self.add_library(env, 'boost_thread-' + self.vc_ver + '-mt-'+env['BOOST_VERSION'])
-
-    def need_boost_date_time(self, env):
-        self.add_library(env, 'boost_date_time-' + self.vc_ver + '-mt-'+env['BOOST_VERSION'])
-
-    def need_boost_filesystem(self, env):
-        self.add_library(env, 'boost_filesystem-' + self.vc_ver + '-mt-'+env['BOOST_VERSION'])
-
-    def need_boost_python(self, env):
-        self.add_library(env, 'boost_python-' + self.vc_ver + '-mt-'+env['BOOST_VERSION'])
-
-    def need_boost_regex(self, env):
-        self.add_library(env, 'boost_regex-' + self.vc_ver + '-mt-'+env['BOOST_VERSION'])
-
-    def need_boost_signals(self, env):
-        self.add_library(env, 'boost_signals-' + self.vc_ver + '-mt-'+env['BOOST_VERSION'])
-
-    def need_boost_math(self, env):
-        self.add_library(env, 'boost_math_c99f-' + self.vc_ver + '-mt-'+env['BOOST_VERSION'])
-        self.add_library(env, 'boost_math_c99l-' + self.vc_ver + '-mt-'+env['BOOST_VERSION'])
-        self.add_library(env, 'boost_math_c99-' + self.vc_ver + '-mt-'+env['BOOST_VERSION'])
-        self.add_library(env, 'boost_math_tr1f-' + self.vc_ver + '-mt-'+env['BOOST_VERSION'])
-        self.add_library(env, 'boost_math_tr1l-' + self.vc_ver + '-mt-'+env['BOOST_VERSION'])
-        self.add_library(env, 'boost_math_tr1-' + self.vc_ver + '-mt-'+env['BOOST_VERSION'])
-
-class CedrusBoostSettingsWindowsDebug:
+class CedrusBoostSettingsWindows:
     def __init__(self, env):
 
         # add boost to CXXflags
-        include_path = [
-            '/I' + env['BOOST_DIR'] + '/include',
-            ]
+        include_path = [ '/I' + env['BOOST_DIR'] + '/include' ]
 
-        lib_path = [
-            env['BOOST_DIR'] + '/lib/',
-            ]
+        lib_path = [ env['BOOST_DIR'] + '/lib' ]
 
         env.AppendUnique( CXXFLAGS = include_path, LIBPATH = lib_path )
 
-        self.vc_ver = 'vc100'    
-        if env['MSVC_VERSION'] == '14.0' :
-            self.vc_ver = 'vc140' 
+        self.vc_ver = 'vc140' if env['MSVC_VERSION'] == '14.0' else 'vc100' 
+
+        build_tag = '-mt-gd-' if env['BUILD_TYPE'] == 'dbg' else '-mt-'
 
     def add_library(self, env, library):
         env.AppendUnique( LIBS = [library] )
 
     def need_boost_system(self, env):
-        self.add_library(env, 'boost_system-' + self.vc_ver + '-mt-gd-'+env['BOOST_VERSION'])
+        self.add_library(env, 'boost_system-' + self.vc_ver + build_tag + env['BOOST_VERSION'])
 
     def need_boost_chrono(self, env):
-        self.add_library(env, 'boost_chrono-' + self.vc_ver + '-mt-gd-'+env['BOOST_VERSION'])
+        self.add_library(env, 'boost_chrono-' + self.vc_ver + build_tag + env['BOOST_VERSION'])
 
     def need_boost_serialization(self, env):
-        self.add_library(env, 'boost_serialization-' + self.vc_ver + '-mt-gd-'+env['BOOST_VERSION'])
-        self.add_library(env, 'boost_wserialization-' + self.vc_ver + '-mt-gd-'+env['BOOST_VERSION'])
+        self.add_library(env, 'boost_serialization-' + self.vc_ver + build_tag + env['BOOST_VERSION'])
+        self.add_library(env, 'boost_wserialization-' + self.vc_ver + build_tag + env['BOOST_VERSION'])
 
     def need_boost_thread(self, env):
-        self.add_library(env, 'boost_thread-' + self.vc_ver + '-mt-gd-'+env['BOOST_VERSION'])
+        self.add_library(env, 'boost_thread-' + self.vc_ver + build_tag + env['BOOST_VERSION'])
 
     def need_boost_date_time(self, env):
-        self.add_library(env, 'boost_date_time-' + self.vc_ver + '-mt-gd-'+env['BOOST_VERSION'])
+        self.add_library(env, 'boost_date_time-' + self.vc_ver + build_tag + env['BOOST_VERSION'])
 
     def need_boost_filesystem(self, env):
-        self.add_library(env, 'boost_filesystem-' + self.vc_ver + '-mt-gd-'+env['BOOST_VERSION'])
+        self.add_library(env, 'boost_filesystem-' + self.vc_ver + build_tag + env['BOOST_VERSION'])
 
     def need_boost_python(self, env):
-        self.add_library(env, 'boost_python-' + self.vc_ver + '-mt-gd-'+env['BOOST_VERSION'])
+        self.add_library(env, 'boost_python-' + self.vc_ver + build_tag + env['BOOST_VERSION'])
 
     def need_boost_regex(self, env):
-        self.add_library(env, 'boost_regex-' + self.vc_ver + '-mt-gd-'+env['BOOST_VERSION'])
+        self.add_library(env, 'boost_regex-' + self.vc_ver + build_tag + env['BOOST_VERSION'])
 
     def need_boost_signals(self, env):
-        self.add_library(env, 'boost_signals-' + self.vc_ver + '-mt-gd-'+env['BOOST_VERSION'])
+        self.add_library(env, 'boost_signals-' + self.vc_ver + build_tag + env['BOOST_VERSION'])
 
     def need_boost_math(self, env):
-        self.add_library(env, 'boost_math_c99f-' + self.vc_ver + '-mt-gd-'+env['BOOST_VERSION'])
-        self.add_library(env, 'boost_math_c99l-' + self.vc_ver + '-mt-gd-'+env['BOOST_VERSION'])
-        self.add_library(env, 'boost_math_c99-' + self.vc_ver + '-mt-gd-'+env['BOOST_VERSION'])
-        self.add_library(env, 'boost_math_tr1f-' + self.vc_ver + '-mt-gd-'+env['BOOST_VERSION'])
-        self.add_library(env, 'boost_math_tr1l-' + self.vc_ver + '-mt-gd-'+env['BOOST_VERSION'])
-        self.add_library(env, 'boost_math_tr1-' + self.vc_ver + '-mt-gd-'+env['BOOST_VERSION'])
+        self.add_library(env, 'boost_math_c99f-' + self.vc_ver + build_tag + env['BOOST_VERSION'])
+        self.add_library(env, 'boost_math_c99l-' + self.vc_ver + build_tag + env['BOOST_VERSION'])
+        self.add_library(env, 'boost_math_c99-' + self.vc_ver + build_tag + env['BOOST_VERSION'])
+        self.add_library(env, 'boost_math_tr1f-' + self.vc_ver + build_tag + env['BOOST_VERSION'])
+        self.add_library(env, 'boost_math_tr1l-' + self.vc_ver + build_tag + env['BOOST_VERSION'])
+        self.add_library(env, 'boost_math_tr1-' + self.vc_ver + build_tag + env['BOOST_VERSION'])
 
 class CedrusBoostSettingsLinux:
     def __init__(self, env):
-
         # on Ubuntu 10 ('lucid'), we used to build boost, and it had version-suffixes.
         # on Ubuntu 13 ('saucy'), we use the 'standard' boost binaries provided by Ubuntu. They lack suffixes.
-        cxxflags = [
-            '-isystem/usr/include/boost', #-'+env['BOOST_VERSION']+'/',  # see note about lucid/saucy above
-            ]
+        cxxflags = [ '-isystem/usr/include/boost' ] #-'+env['BOOST_VERSION']+'/',  # see note about lucid/saucy above
 
-        lib_path = [
-            ]
+        lib_path = [ ]
 
         env.AppendUnique( CXXFLAGS = cxxflags, LIBPATH = lib_path, )
 

@@ -23,9 +23,9 @@ def publish_all_libs_to_staging(env):
 
 def publish_all_libs_to_staging_mac(env):
     if env['BUILD_TYPE'] == 'opt':
-        lib = os.getenv('WXWIN_29','') + '/built_libs/lib/libwxGuiTesting_opt.dylib'
+        lib = env['WX_DIR'] + '/lib/libwxGuiTesting_opt.dylib'
     else:
-        lib = os.getenv('WXWIN_29','') + '/built_libs/lib/libwxGuiTesting_dbg.dylib'
+        lib = env['WX_DIR'] + '/lib/libwxGuiTesting_dbg.dylib'
 
     results = []
 
@@ -39,15 +39,15 @@ def publish_all_libs_to_staging_windows(env):
 
 def need_wxGuiTest_mac(env):
 
-    include_path = [ '-isystem'+os.getenv('WXGUITEST','')+'/cppunit-1.13.2/include',
-                     '-isystem'+os.getenv('WXGUITEST','')+'/wxGuiTest/include' ]
+    include_path = [ '-isystem' + env['WX_GUI_TEST_DIR'] + '/cppunit-1.13.2/include',
+                     '-isystem' + env['WX_GUI_TEST_DIR'] + '/wxGuiTest/include' ]
 
     if env['BUILD_TYPE'] == 'opt':
         linked_libs = [ 'wxGuiTesting_opt', 'cppunit' ]
     else:
         linked_libs = [ 'wxGuiTesting_dbg', 'cppunit' ]
 
-    lib_path = [ os.getenv('WXWIN_29','') + '/built_libs/lib/' ]
+    lib_path = [ env['WX_DIR'] + '/lib' ]
 
     env.AppendUnique( CXXFLAGS = include_path,
                       LIBS = linked_libs,
@@ -56,9 +56,6 @@ def need_wxGuiTest_mac(env):
 
 def need_wxGuiTest_windows(env):
     base_folder = env['WX_GUI_TEST_DIR']
-
-    if env['WX_VERSION'] == '2.8':
-        base_folder += '_2.8'
 
     vs_ver = 'vs2010'
     if env['MSVC_VERSION'] == '14.0' :
@@ -71,6 +68,7 @@ def need_wxGuiTest_windows(env):
             lib_path = [ base_folder + '/' + vs_ver + '-debug' ]
 
     include_path = [ '/I' + base_folder + '/include' ]
+
     linked_libraries = [ 'wxGuiTest_StaticLib', 'libCppUnit' ]
 
     env.AppendUnique( CXXFLAGS = include_path,

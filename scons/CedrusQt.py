@@ -66,9 +66,7 @@ class CedrusQtSettingsMac:
             '-isystem' + env['QT_DIR'] + '/macosx/include/QtXml/',
             ]
 
-        lib_path = [
-            env['QT_DIR']+'/macosx/final-lib/',
-            ]
+        lib_path = [  env['QT_DIR']+'/macosx/final-lib/' ]
 
         env.AppendUnique( CXXFLAGS = cxxflags,
                           LIBPATH = lib_path,
@@ -91,9 +89,7 @@ class CedrusQtSettingsMac:
 
     def _copy_plugin_but_no_linker(self, env, single_lib):
 
-        suffix = ''
-        if env['BUILD_TYPE'] == 'dbg':
-            suffix += '_debug'
+        suffix = '_debug' if env['BUILD_TYPE'] == 'dbg'  else ''
 
         staging_lib = str( env.subst('$STAGING_DIR') + '/lib' + str(single_lib) + suffix + env['SHLIBSUFFIX'] )
 
@@ -147,10 +143,7 @@ class CedrusQtSettingsMac:
 
     def publish_all_libs_to_staging(self, env):
 
-        want_debug_libs = False
-
-        if env['BUILD_TYPE'] == 'dbg':
-            want_debug_libs = True
+        want_debug_libs = env['BUILD_TYPE'] == 'dbg'
 
         qt_libs = env.Glob( env['QT_DIR'] + '/macosx/final-lib/*dylib' )
 
@@ -187,9 +180,7 @@ class CedrusQtSettingsWin32:
             '/I' + env['QT_DIR'] + '/win32/include/QtXml/',
             ]
 
-        lib_path = [
-            env['QT_DIR'] + '/win32/final-lib/',
-            ]
+        lib_path = [ env['QT_DIR'] + '/win32/final-lib/' ]
 
         env.AppendUnique( CXXFLAGS = cxxflags,
                           LIBPATH = lib_path,
@@ -204,8 +195,7 @@ class CedrusQtSettingsWin32:
 
         if env['BUILD_TYPE'] == 'opt':
             library += num_suffix
-
-        if env['BUILD_TYPE'] == 'dbg':
+        elif env['BUILD_TYPE'] == 'dbg':
             library += 'd' + num_suffix
 
         env.AppendUnique( LIBS = [library] )
@@ -274,4 +264,3 @@ class CedrusQtSettingsWin32:
                 results += env.Install( '$STAGING_DIR', lib )
 
         return results
-

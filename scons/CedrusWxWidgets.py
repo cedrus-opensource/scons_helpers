@@ -12,10 +12,7 @@ class CedrusWxWidgetsSettings:
         else:
             build_mode = GetOption('build_mode')
 
-        if build_mode == 'dbg':
-            self.debug = True
-        else:
-            self.debug = False
+        self.debug = (build_mode == 'dbg')
 
         if sys.platform == 'win32':
             self.impl = CedrusWxWidgetsWindows(env, self.debug, wx_ver)
@@ -70,7 +67,6 @@ class CedrusWxWidgetsMac:
         self.carb_coco_str = 'base_carbonu'
 
         self.wx_ver = wx_ver
-        self.wx_ver_no_dots = wx_ver.replace('.','')
 
         if StrictVersion(wx_ver) >= StrictVersion('2.9'):
             self.mac_str = 'osx_cocoau'
@@ -81,62 +77,28 @@ class CedrusWxWidgetsMac:
 
     def _proceed_with_include_paths(self, env):
         # set cxxflags for wxWidgets
-        cxxflags = []
-        if self.debug:
-            if StrictVersion(wx_ver) == StrictVersion('2.9'):
-                cxxflags = [
-                    '-isystem'+os.getenv('WXWIN_SL','')+'/include/',
-                    '-isystem'+os.getenv('WXWIN_SL','')+'/built_libs/lib/wx/include/mac-unicode-debug-'+env['WX_VERSION']+'-i386'
-                    ]
-
-            else: # this 'else' used to be for testing 2.8.10, but now it's for 2.9 !
-                cxxflags = [
-                    '-isystem'+os.getenv('WXWIN_29','')+'/built_libs/include/wx-'+env['WX_VERSION'],
-                    '-isystem'+os.getenv('WXWIN_29','')+'/built_libs/lib/wx/include/osx_cocoa-unicode-'+env['WX_VERSION']
-                    ]
-        else:
-            if StrictVersion(wx_ver) == StrictVersion('2.8'):
-                cxxflags = [
-                    '-isystem'+os.getenv('WXWIN_SL','')+'/include/',
-                    '-isystem'+os.getenv('WXWIN_SL','')+'/built_libs/lib/wx/include/mac-unicode-release-'+env['WX_VERSION']+'-i386'
-                    ]
-            else:
-                cxxflags = [
-                    '-isystem'+os.getenv('WXWIN_29','')+'/built_libs/include/wx-'+env['WX_VERSION'],
-                    '-isystem'+os.getenv('WXWIN_29','')+'/built_libs/lib/wx/include/osx_cocoa-unicode-'+env['WX_VERSION']
-                    ]
+        cxxflags = [
+                     '-isystem' + env['WX_DIR'] + '/include',
+                     '-isystem' + env['WX_DIR'] + '/lib/wx/include/osx_cocoa-unicode-' + env['WX_VERSION']
+                   ]
 
         env.AppendUnique( CXXFLAGS = cxxflags )
 
     def _always_need_base(self, env):
-        if self.debug:
-            libname = 'wx_' + self.carb_coco_str + 'd-' + self.wx_ver_no_dots
-        else:
-            libname = 'wx_' + self.carb_coco_str + '-' + self.wx_ver_no_dots 
+        build_tag = 'd-' if self.debug else '-'
+
+        libname = 'wx_' + self.carb_coco_str + build_tag + self.wx_ver
 
         env.AppendUnique(LIBS=[libname])
 
-        if StrictVersion(wx_ver) == StrictVersion('2.8'):
-            lib_path = [
-                os.getenv('WXWIN_SL','')+'/lib/',
-                ]
-            lib_path.append( os.getenv('WXWIN_SL','') + '/built_libs/lib/' )
-        else: # this 'else' used to be for testing 2.8.10, but now it's for 2.9 !
-            lib_path = []
-            lib_path.append( os.getenv('WXWIN_29','') + '/built_libs/lib/' )
+        lib_path = [ env['WX_DIR'] + '/lib']
 
-        env.AppendUnique( LIBPATH = lib_path,
-                          LIBS=[libname])
+        env.AppendUnique( LIBPATH = lib_path, LIBS = [libname] )
 
     def publish_all_libs_to_staging(self, env):
-        if StrictVersion(wx_ver) == StrictVersion('2.8'):
-            wxlibs = env.Glob( os.getenv('WXWIN_SL','')+'/built_libs/lib/*.dylib' )
+        build_tag = '*ud[_-]*' if self.debug else '*u[_-]*'
 
-        else: # this 'else' used to be for testing 2.8.10, but now it's for 2.9 !
-            if self.debug:
-                wxlibs = env.Glob( os.getenv('WXWIN_29','')+'/built_libs/lib/*ud[_-]*.dylib' )
-            else:
-                wxlibs = env.Glob( os.getenv('WXWIN_29','')+'/built_libs/lib/*u[_-]*.dylib' )
+        wxlibs = env.Glob( env['WX_DIR'] + '/lib/' + build_tag + '.dylib' )
 
         results = []
 
@@ -149,10 +111,8 @@ class CedrusWxWidgetsMac:
         self._always_need_base(env)
         self._proceed_with_include_paths(env)
 
-        if self.debug:
-            libname = 'wx_' + self.mac_str + 'd_core-' + self.wx_ver_no_dots
-        else:
-            libname = 'wx_' + self.mac_str + '_core-'+ self.wx_ver_no_dots
+        build_tag = 'd_core-' if self.debug else '_core-'
+        libname = 'wx_' + self.mac_str + build_tag + self.wx_ver
 
         env.AppendUnique(LIBS=[libname])
 
@@ -160,10 +120,8 @@ class CedrusWxWidgetsMac:
         self._always_need_base(env)
         self._proceed_with_include_paths(env)
 
-        if self.debug:
-            libname = 'wx_' + self.carb_coco_str + 'd_net-' + self.wx_ver_no_dots
-        else:
-            libname = 'wx_' + self.carb_coco_str + '_net-' + self.wx_ver_no_dots
+        build_tag = 'd_net-' if self.debug else '_net-'
+        libname = 'wx_' + self.carb_coco_str + build_tag + self.wx_ver
 
         env.AppendUnique(LIBS=[libname])
 
@@ -171,10 +129,8 @@ class CedrusWxWidgetsMac:
         self._always_need_base(env)
         self._proceed_with_include_paths(env)
 
-        if self.debug:
-            libname = 'wx_' + self.carb_coco_str + 'd_xml-' + self.wx_ver_no_dots
-        else:
-            libname = 'wx_' + self.carb_coco_str + '_xml-' + self.wx_ver_no_dots
+        build_tag = 'd_xml-' if self.debug else '_xml-'
+        libname = 'wx_' + self.carb_coco_str + build_tag + self.wx_ver
 
         env.AppendUnique(LIBS=[libname])
 
@@ -182,10 +138,8 @@ class CedrusWxWidgetsMac:
         self._always_need_base(env)
         self._proceed_with_include_paths(env)
 
-        if self.debug:
-            libname = 'wx_' + self.mac_str + 'd_adv-' + self.wx_ver_no_dots
-        else:
-            libname = 'wx_' + self.mac_str + '_adv-' + self.wx_ver_no_dots
+        build_tag = 'd_adv-' if self.debug else '_adv-'
+        libname = 'wx_' + self.mac_str + build_tag + self.wx_ver
 
         env.AppendUnique(LIBS=[libname])
 
@@ -193,10 +147,8 @@ class CedrusWxWidgetsMac:
         self._always_need_base(env)
         self._proceed_with_include_paths(env)
 
-        if self.debug:
-            libname = 'wx_' + self.mac_str + 'd_aui-' + self.wx_ver_no_dots
-        else:
-            libname = 'wx_' + self.mac_str + '_aui-' + self.wx_ver_no_dots
+        build_tag = 'd_aui-' if self.debug else '_aui-'
+        libname = 'wx_' + self.mac_str + build_tag + self.wx_ver
 
         env.AppendUnique(LIBS=[libname])
 
@@ -204,10 +156,8 @@ class CedrusWxWidgetsMac:
         self._always_need_base(env)
         self._proceed_with_include_paths(env)
 
-        if self.debug:
-            libname = 'wx_' + self.mac_str + 'd_html-' + self.wx_ver_no_dots
-        else:
-            libname = 'wx_' + self.mac_str + '_html-' + self.wx_ver_no_dots
+        build_tag = 'd_html-' if self.debug else '_html-'
+        libname = 'wx_' + self.mac_str + build_tag + self.wx_ver
 
         env.AppendUnique(LIBS=[libname])
 
@@ -215,10 +165,8 @@ class CedrusWxWidgetsMac:
         self._always_need_base(env)
         self._proceed_with_include_paths(env)
 
-        if self.debug:
-            libname = 'wx_' + self.mac_str + 'd_qa-' + self.wx_ver_no_dots
-        else:
-            libname = 'wx_' + self.mac_str + '_qa-' + self.wx_ver_no_dots
+        build_tag = 'd_qa-' if self.debug else '_qa-'
+        libname = 'wx_' + self.mac_str + build_tag + self.wx_ver
 
         env.AppendUnique(LIBS=[libname])
 
@@ -226,10 +174,8 @@ class CedrusWxWidgetsMac:
         self._always_need_base(env)
         self._proceed_with_include_paths(env)
 
-        if self.debug:
-            libname = 'wx_' + self.mac_str + 'd_richtext-' + self.wx_ver_no_dots
-        else:
-            libname = 'wx_' + self.mac_str + '_richtext-' + self.wx_ver_no_dots
+        build_tag = 'd_richtext-' if self.debug else '_richtext-'
+        libname = 'wx_' + self.mac_str + build_tag + self.wx_ver
 
         env.AppendUnique(LIBS=[libname])
 
@@ -237,82 +183,39 @@ class CedrusWxWidgetsMac:
         self._always_need_base(env)
         self._proceed_with_include_paths(env)
 
-        if self.debug:
-            libname = 'wx_' + self.mac_str + 'd_xrc-' + self.wx_ver_no_dots
-        else:
-            libname = 'wx_' + self.mac_str + '_xrc-' + self.wx_ver_no_dots
+        build_tag = 'd_xrc-' if self.debug else '_xrc-'
+        libname = 'wx_' + self.mac_str + build_tag + self.wx_ver
 
         env.AppendUnique(LIBS=[libname])
 
 class CedrusWxWidgetsWindows:
     def __init__(self, env, debug, wx_ver):
         self.debug = debug
-        self.wx_ver = wx_ver    
+        self.wx_ver = wx_ver
         self.wx_ver_no_dots = wx_ver.replace('.','')
 
-        if self.debug:
-            libname = 'wxbase' + self.wx_ver_no_dots +'ud'
-        else:
-            libname = 'wxbase' + self.wx_ver_no_dots +'u'
-
-        self.vc_dir = 'vc_dll_vc10'
-        if env['MSVC_VERSION'] == '14.0' :
-            self.vc_dir = 'vc_dll_vc14'
+        build_tag = 'ud' if self.debug else 'u'
+        libname = 'wxbase' + self.wx_ver_no_dots + build_tag
 
         env.AppendUnique(LIBS=[libname])
 
-        cxxflags = []
-        lib_path = []
-        if debug:
-            if StrictVersion(wx_ver) == StrictVersion('2.8'):
-                cxxflags = [
-                    '/I'+os.getenv('WXWIN_SL','')+'/lib/' + self.vc_dir + '/mswud/',
-                    '/I'+os.getenv('WXWIN_SL','')+'/include/',
-                    ]
-                lib_path = [
-                    os.getenv('WXWIN_SL','')+'/lib/' + self.vc_dir,
-                    ]
-            else:
-                cxxflags = [
-                    '/I'+ env['WX_DIR'] + '/lib/' + self.vc_dir + '/mswud/',
-                    '/I'+ env['WX_DIR'] + '/include/',
-                    ]
-                lib_path = [
-                    env['WX_DIR'] + '/lib/' + self.vc_dir,
-                    ]
-        else:
-            if StrictVersion(wx_ver) == StrictVersion('2.8'):
-                cxxflags = [
-                    '/I'+os.getenv('WXWIN_SL','')+'/lib/' + self.vc_dir + '/mswu/',
-                    '/I'+os.getenv('WXWIN_SL','')+'/include/',
-                    ]
-                lib_path = [
-                    os.getenv('WXWIN_SL','')+'/lib/' + self.vc_dir ,
-                    ]
-            else:
-                cxxflags = [
-                    '/I' + env['WX_DIR'] + '/lib/' + self.vc_dir + '/mswu/',
-                    '/I' + env['WX_DIR'] + '/include/',
-                    ]
-                lib_path = [
-                    env['WX_DIR'] + '/lib/' + self.vc_dir,
-                    ]
+        self.vc_dir = 'vc_dll_vc14' if env['MSVC_VERSION'] == '14.0' else 'vc_dll_vc10'
+
+        cxxflags = [
+                     '/I' + env['WX_DIR'] + '/lib/' + self.vc_dir + '/mswu/',
+                     '/I' + env['WX_DIR'] + '/include',
+                   ]
+        lib_path = [ env['WX_DIR'] + '/lib/' + self.vc_dir ]
 
         env.AppendUnique( CXXFLAGS = cxxflags,
                     LIBPATH = lib_path,
                     LIBS = [libname])
 
     def publish_all_libs_to_staging(self, env):
-        if StrictVersion(self.wx_ver) == StrictVersion("2.8"):
-                wxlibs = env.Glob( os.getenv('WXWIN_SL','')+'/lib/' + self.vc_dir + '/*.dll' )
-                wxlibs += env.Glob( os.getenv('WXWIN_SL','')+'/lib/' + self.vc_dir + '/*.pdb' )
-        else:
-            if self.debug:
-                wxlibs = env.Glob( env['WX_DIR'] + '/lib/' + self.vc_dir + '/*ud[_-]*.dll' )
-                wxlibs += env.Glob( env['WX_DIR'] + '/lib/' + self.vc_dir + '/*ud[_-]*.pdb' )
-            else:
-                wxlibs = env.Glob( env['WX_DIR'] + '/lib/' + self.vc_dir + '/*u[_-]*.dll' )
-                wxlibs += env.Glob( env['WX_DIR'] + '/lib/' + self.vc_dir + '/*u[_-]*.pdb' )
+        build_tag = '*ud[_-]*' if self.debug else '*u[_-]*'
+
+        wxlibs = env.Glob( env['WX_DIR'] + '/lib/' + self.vc_dir + '/' + build_tag + '.dll' )
+        wxlibs += env.Glob( env['WX_DIR'] + '/lib/' + self.vc_dir + '/' + build_tag + '.pdb' )
 
         results = []
 
@@ -325,74 +228,56 @@ class CedrusWxWidgetsWindows:
         return results
 
     def need_core(self, env):
-        if self.debug:
-            libname = 'wxmsw' + self.wx_ver_no_dots + 'ud_core'
-        else:
-            libname = 'wxmsw' + self.wx_ver_no_dots + 'u_core'
+        build_tag = 'ud_core' if self.debug else 'u_core'
+        libname = 'wxmsw' + self.wx_ver_no_dots + build_tag
 
         env.AppendUnique(LIBS=[libname])
 
     def need_net(self, env):
-        if self.debug:
-            libname = 'wxbase' + self.wx_ver_no_dots + 'ud_net'
-        else:
-            libname = 'wxbase' + self.wx_ver_no_dots + 'u_net'
+        build_tag = 'ud_net' if self.debug else 'u_net'
+        libname = 'wxbase' + self.wx_ver_no_dots + build_tag
 
         env.AppendUnique(LIBS=[libname])
 
     def need_xml(self, env):
-        if self.debug:
-            libname = 'wxbase' + self.wx_ver_no_dots + 'ud_xml'
-        else:
-            libname = 'wxbase' + self.wx_ver_no_dots + 'u_xml'
+        build_tag = 'ud_xml' if self.debug else 'u_xml'
+        libname = 'wxbase' + self.wx_ver_no_dots + build_tag
 
         env.AppendUnique(LIBS=[libname])
 
     def need_adv(self, env):
-        if self.debug:
-            libname = 'wxmsw' + self.wx_ver_no_dots + 'ud_adv'
-        else:
-            libname = 'wxmsw' + self.wx_ver_no_dots + 'u_adv'
+        build_tag = 'ud_adv' if self.debug else 'u_adv'
+        libname = 'wxmsw' + self.wx_ver_no_dots + build_tag
 
         env.AppendUnique(LIBS=[libname])
 
     def need_aui(self, env):
-        if self.debug:
-            libname = 'wxmsw' + self.wx_ver_no_dots + 'ud_aui'
-        else:
-            libname = 'wxmsw' + self.wx_ver_no_dots + 'u_aui'
+        build_tag = 'ud_aui' if self.debug else 'u_aui'
+        libname = 'wxmsw' + self.wx_ver_no_dots + build_tag
 
         env.AppendUnique(LIBS=[libname])
 
     def need_html(self, env):
-        if self.debug:
-            libname = 'wxmsw' + self.wx_ver_no_dots + 'ud_html'
-        else:
-            libname = 'wxmsw' + self.wx_ver_no_dots + 'u_html'
+        build_tag = 'ud_html' if self.debug else 'u_html'
+        libname = 'wxmsw' + self.wx_ver_no_dots + build_tag
 
         env.AppendUnique(LIBS=[libname])
 
     def need_qa(self, env):
-        if self.debug:
-            libname = 'wxmsw' + self.wx_ver_no_dots + 'ud_qa'
-        else:
-            libname = 'wxmsw' + self.wx_ver_no_dots + 'u_qa'
+        build_tag = 'ud_qa' if self.debug else 'u_qa'
+        libname = 'wxmsw' + self.wx_ver_no_dots + build_tag
 
         env.AppendUnique(LIBS=[libname])
 
     def need_richtext(self, env):
-        if self.debug:
-            libname = 'wxmsw' + self.wx_ver_no_dots + 'ud_richtext'
-        else:
-            libname = 'wxmsw' + self.wx_ver_no_dots + 'u_richtext'
+        build_tag = 'ud_richtext' if self.debug else 'u_richtext'
+        libname = 'wxmsw' + self.wx_ver_no_dots + build_tag
 
         env.AppendUnique(LIBS=[libname])
 
     def need_xrc(self, env):
-        if self.debug:
-            libname = 'wxmsw' + self.wx_ver_no_dots + 'ud_xrc'
-        else:
-            libname = 'wxmsw' + self.wx_ver_no_dots + 'u_xrc'
+        build_tag = 'ud_xrc' if self.debug else 'u_xrc'
+        libname = 'wxmsw' + self.wx_ver_no_dots + build_tag
 
         env.AppendUnique(LIBS=[libname])
 
@@ -417,13 +302,11 @@ class CedrusWxWidgetsLinux:
                 ]
         else:
             cxxflags = [
-                '-isystem/usr/include/wx-'+env['WX_VERSION']+'/',
+                '-isystem/usr/include/wx-' + env['WX_VERSION']+'/',
                 '-isystem/usr/lib/x86_64-linux-gnu/wx/include/base-unicode-release-' + wx_ver +'/',
                 ]
 
-        lib_path = [
-            '/usr/lib/',
-            ]
+        lib_path = [ '/usr/lib/' ]
 
         env.AppendUnique( CXXFLAGS = cxxflags,
                     LIBPATH = lib_path,
