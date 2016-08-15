@@ -145,16 +145,11 @@ class CedrusQtSettingsMac:
 
         want_debug_libs = env['BUILD_TYPE'] == 'dbg'
 
-        qt_libs = env.Glob( env['QT_DIR'] + '/macosx/final-lib/*dylib' )
+        qt_libs = env.Glob( env['QT_DIR'] + '/lib/*dylib' )
 
         results = []
-
         for lib in qt_libs:
-            is_a_debug_lib = ('debug' in str(lib) )
-            not_symlink = (False == os.path.islink( str(lib) ) )
-
-            if (want_debug_libs == is_a_debug_lib) and not_symlink:
-                results += env.Install( '$STAGING_DIR', lib )
+            results += env.Install( '$STAGING_DIR', lib )
 
         return results
 
@@ -250,17 +245,13 @@ class CedrusQtSettingsWin32:
 
     def publish_all_libs_to_staging(self, env):
 
-        want_debug_libs = env['BUILD_TYPE'] == 'dbg'
+        wild_card = '*d.dll' if env['BUILD_TYPE'] == 'dbg' else '*.dll'
 
-        qt_libs = env.Glob( env['QT_DIR'] + '/bin/*dll' )
-        qt_libs += env.Glob( env['QT_DIR'] + '/bin/*pdb' )
+        qt_libs = env.Glob( env['QT_DIR'] + '/bin/' + wild_card )
 
         results = []
 
         for lib in qt_libs:
-            is_a_debug_lib = ('d.' in str(lib) )
-
-            if want_debug_libs == is_a_debug_lib:
-                results += env.Install( '$STAGING_DIR', lib )
+            results += env.Install( '$STAGING_DIR', lib )
 
         return results
