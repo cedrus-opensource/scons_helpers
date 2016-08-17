@@ -1,6 +1,7 @@
 import os
 from SCons.Script import *
 import platform
+import CedrusSConsSuperLabHelperFunctions
 
 class CedrusQtSettings:
     def __init__(self, env, project_app_name):
@@ -52,39 +53,24 @@ class CedrusQtSettingsMac:
 
         # macosx/include  QT_BINARIES_REPO
         cxxflags = [
-            '-isystem' + env['QT_DIR'] + '/macosx/include/',
-            '-isystem' + env['QT_DIR'] + '/macosx/include/QtCore/',
-            '-isystem' + env['QT_DIR'] + '/macosx/include/QtGui/',
-            '-isystem' + env['QT_DIR'] + '/macosx/include/QtOpenGL/',
-            '-isystem' + env['QT_DIR'] + '/macosx/include/QtOpenGLExtensions/',
-            '-isystem' + env['QT_DIR'] + '/macosx/include/QtPlatformSupport/',
-            '-isystem' + env['QT_DIR'] + '/macosx/include/QtPrintSupport/',
-            '-isystem' + env['QT_DIR'] + '/macosx/include/QtSensors/',
-            '-isystem' + env['QT_DIR'] + '/macosx/include/QtSvg/',
-            '-isystem' + env['QT_DIR'] + '/macosx/include/QtTest/',
-            '-isystem' + env['QT_DIR'] + '/macosx/include/QtWidgets/',
-            '-isystem' + env['QT_DIR'] + '/macosx/include/QtXml/',
+            '-isystem' + env['QT_DIR'] + '/include/',
+            '-isystem' + env['QT_DIR'] + '/include/QtCore/',
+            '-isystem' + env['QT_DIR'] + '/include/QtGui/',
+            '-isystem' + env['QT_DIR'] + '/include/QtWidgets/'
             ]
 
-        lib_path = [  env['QT_DIR']+'/macosx/final-lib/' ]
+        lib_path = [  env['QT_DIR']+'/lib' ]
 
-        env.AppendUnique( CXXFLAGS = cxxflags,
-                          LIBPATH = lib_path,
-                          CPPDEFINES = ['QT_NO_KEYWORDS'] )
+        env.AppendUnique( CXXFLAGS = cxxflags, LIBPATH = lib_path)
 
         if env['BUILD_TYPE'] == 'opt':
             env.AppendUnique( CPPDEFINES = ['QT_NO_DEBUG_OUTPUT'] )
 
-    def add_library(self, env, library, num_suffix = '.5.1.1' ):
+    def add_library(self, env, library):
 
         self._use_qt_include_paths(env)
-
-        if env['BUILD_TYPE'] == 'opt':
-            library += num_suffix
-
-        if env['BUILD_TYPE'] == 'dbg':
-            library += '_debug' + num_suffix
-
+        num_suffix = '.5'
+        library += num_suffix
         env.AppendUnique( LIBS = [library] )
 
     def _copy_plugin_but_no_linker(self, env, single_lib):
@@ -114,11 +100,9 @@ class CedrusQtSettingsMac:
         self._copy_plugin_but_no_linker(env, 'qtaccessiblewidgets')
 
     def need_qt_basics(self,env):
-        self._add_base_plugins(env)
         self.add_library(env, 'Qt5Widgets')
         self.add_library(env, 'Qt5Gui')
         self.add_library(env, 'Qt5Core')
-        self.add_library(env, 'Qt5PrintSupport')
 
     def need_qt_opengl(self,env):
         self.add_library(env, 'Qt5OpenGL')
@@ -142,14 +126,16 @@ class CedrusQtSettingsMac:
         self.add_library(env, 'Qt5Xml')
 
     def publish_all_libs_to_staging(self, env):
-
-        want_debug_libs = env['BUILD_TYPE'] == 'dbg'
-
-        qt_libs = env.Glob( env['QT_DIR'] + '/lib/*dylib' )
+        qt_libs = env.Glob( env['QT_DIR'] + '/lib/*.dylib' )
+        app_suffix = CedrusSConsSuperLabHelperFunctions.get_superlab_current_version_suffix( os.path.normpath( env.subst( '$STAGING_DIR/../../../' ) ) )
+        mac_app_bundle_contents_dir = env.subst('$STAGING_DIR/') + 'SuperLab ' + app_suffix  + '.app/Contents/MacOS/'
 
         results = []
+
         for lib in qt_libs:
-            results += env.Install( '$STAGING_DIR', lib )
+            if ( False == os.path.islink( str(lib) ) ):
+                results += env.Install( '$STAGING_DIR', lib )
+                results += env.Install( mac_app_bundle_contents_dir, lib )
 
         return results
 
@@ -255,3 +241,4 @@ class CedrusQtSettingsWin32:
             results += env.Install( '$STAGING_DIR', lib )
 
         return results
+
