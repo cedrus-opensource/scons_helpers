@@ -150,46 +150,46 @@ class CedrusBoostSettingsWindows:
 
         self.vc_ver = 'vc140' if env['MSVC_VERSION'] == '14.0' else 'vc100' 
 
-        build_tag = '-mt-gd-' if env['BUILD_TYPE'] == 'dbg' else '-mt-'
+        self.build_tag = '-mt-gd-' if env['BUILD_TYPE'] == 'dbg' else '-mt-'
 
     def add_library(self, env, library):
         env.AppendUnique( LIBS = [library] )
 
     def need_boost_system(self, env):
-        self.add_library(env, 'boost_system-' + self.vc_ver + build_tag + env['BOOST_VERSION'])
+        self.add_library(env, 'boost_system-' + self.vc_ver + self.build_tag + env['BOOST_VERSION'])
 
     def need_boost_chrono(self, env):
-        self.add_library(env, 'boost_chrono-' + self.vc_ver + build_tag + env['BOOST_VERSION'])
+        self.add_library(env, 'boost_chrono-' + self.vc_ver + self.build_tag + env['BOOST_VERSION'])
 
     def need_boost_serialization(self, env):
-        self.add_library(env, 'boost_serialization-' + self.vc_ver + build_tag + env['BOOST_VERSION'])
-        self.add_library(env, 'boost_wserialization-' + self.vc_ver + build_tag + env['BOOST_VERSION'])
+        self.add_library(env, 'boost_serialization-' + self.vc_ver + self.build_tag + env['BOOST_VERSION'])
+        self.add_library(env, 'boost_wserialization-' + self.vc_ver + self.build_tag + env['BOOST_VERSION'])
 
     def need_boost_thread(self, env):
-        self.add_library(env, 'boost_thread-' + self.vc_ver + build_tag + env['BOOST_VERSION'])
+        self.add_library(env, 'boost_thread-' + self.vc_ver + self.build_tag + env['BOOST_VERSION'])
 
     def need_boost_date_time(self, env):
-        self.add_library(env, 'boost_date_time-' + self.vc_ver + build_tag + env['BOOST_VERSION'])
+        self.add_library(env, 'boost_date_time-' + self.vc_ver + self.build_tag + env['BOOST_VERSION'])
 
     def need_boost_filesystem(self, env):
-        self.add_library(env, 'boost_filesystem-' + self.vc_ver + build_tag + env['BOOST_VERSION'])
+        self.add_library(env, 'boost_filesystem-' + self.vc_ver + self.build_tag + env['BOOST_VERSION'])
 
     def need_boost_python(self, env):
-        self.add_library(env, 'boost_python-' + self.vc_ver + build_tag + env['BOOST_VERSION'])
+        self.add_library(env, 'boost_python-' + self.vc_ver + self.build_tag + env['BOOST_VERSION'])
 
     def need_boost_regex(self, env):
-        self.add_library(env, 'boost_regex-' + self.vc_ver + build_tag + env['BOOST_VERSION'])
+        self.add_library(env, 'boost_regex-' + self.vc_ver + self.build_tag + env['BOOST_VERSION'])
 
     def need_boost_signals(self, env):
-        self.add_library(env, 'boost_signals-' + self.vc_ver + build_tag + env['BOOST_VERSION'])
+        self.add_library(env, 'boost_signals-' + self.vc_ver + self.build_tag + env['BOOST_VERSION'])
 
     def need_boost_math(self, env):
-        self.add_library(env, 'boost_math_c99f-' + self.vc_ver + build_tag + env['BOOST_VERSION'])
-        self.add_library(env, 'boost_math_c99l-' + self.vc_ver + build_tag + env['BOOST_VERSION'])
-        self.add_library(env, 'boost_math_c99-' + self.vc_ver + build_tag + env['BOOST_VERSION'])
-        self.add_library(env, 'boost_math_tr1f-' + self.vc_ver + build_tag + env['BOOST_VERSION'])
-        self.add_library(env, 'boost_math_tr1l-' + self.vc_ver + build_tag + env['BOOST_VERSION'])
-        self.add_library(env, 'boost_math_tr1-' + self.vc_ver + build_tag + env['BOOST_VERSION'])
+        self.add_library(env, 'boost_math_c99f-' + self.vc_ver + self.build_tag + env['BOOST_VERSION'])
+        self.add_library(env, 'boost_math_c99l-' + self.vc_ver + self.build_tag + env['BOOST_VERSION'])
+        self.add_library(env, 'boost_math_c99-' + self.vc_ver + self.build_tag + env['BOOST_VERSION'])
+        self.add_library(env, 'boost_math_tr1f-' + self.vc_ver + self.build_tag + env['BOOST_VERSION'])
+        self.add_library(env, 'boost_math_tr1l-' + self.vc_ver + self.build_tag + env['BOOST_VERSION'])
+        self.add_library(env, 'boost_math_tr1-' + self.vc_ver + self.build_tag + env['BOOST_VERSION'])
 
 class CedrusBoostSettingsLinux:
     def __init__(self, env):
