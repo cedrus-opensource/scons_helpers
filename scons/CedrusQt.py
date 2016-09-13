@@ -240,5 +240,13 @@ class CedrusQtSettingsWin32:
         for lib in qt_libs:
             results += env.Install( '$STAGING_DIR', lib )
 
+        qt_plugins = env.Glob( env['QT_DIR'] + '/platforms/' + wild_card )
+
+        for lib in qt_plugins:
+            results += env.Install( '$STAGING_DIR'+ '/platforms/', lib )
+
+        qt_conf = env.Install( '$STAGING_DIR', env.Glob( env['QT_DIR'] + '/qt.conf' ) ) 
+        results += qt_conf
+
         return results
 
