@@ -205,7 +205,8 @@ class CedrusWxWidgetsWindows:
                      '/I' + env['WX_DIR'] + '/lib/' + self.vc_dir + '/mswu/',
                      '/I' + env['WX_DIR'] + '/include',
                    ]
-        lib_path = [ env['WX_DIR'] + '/lib/' + self.vc_dir ]
+
+        lib_path = [ env['WX_DIR'] + '/lib/' + self.vc_dir, ]
 
         env.AppendUnique( CXXFLAGS = cxxflags,
                     LIBPATH = lib_path,

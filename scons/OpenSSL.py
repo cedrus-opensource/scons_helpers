@@ -30,7 +30,7 @@ def need_openssl_mac(env):
 
 def publish_all_libs_to_staging_win(env):
     # publish openssl libraries
-    ssl_libs = env.Glob( os.getenv('OPENSSL','')+'/bin/*.dll' )
+    ssl_libs = env.Glob( env['OPENSSL']+'/bin/*.dll' )
 
     results = []
 
@@ -41,8 +41,9 @@ def publish_all_libs_to_staging_win(env):
 
 def need_openssl_windows(env):
     lib_dependencies = [ 'ssleay32', 'libeay32' ]
-    include_path = [ '/I'+os.getenv('OPENSSL','')+'/include/' ]
-    libpath = [ os.getenv('OPENSSL','')+'/lib' ]
+    print "@@@@@@@@@@@ ", env['OPENSSL']
+    include_path = [ '/I' + env['OPENSSL']+'/include/' ]
+    libpath = [ env['OPENSSL']+'/lib' ]
 
     env.AppendUnique( CXXFLAGS = include_path,
                 LIBPATH = libpath,
