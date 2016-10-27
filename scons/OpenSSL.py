@@ -41,7 +41,6 @@ def publish_all_libs_to_staging_win(env):
 
 def need_openssl_windows(env):
     lib_dependencies = [ 'ssleay32', 'libeay32' ]
-    print "@@@@@@@@@@@ ", env['OPENSSL']
     include_path = [ '/I' + env['OPENSSL']+'/include/' ]
     libpath = [ env['OPENSSL']+'/lib' ]
 
