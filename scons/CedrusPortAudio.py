@@ -56,22 +56,20 @@ def need_pa_w_sndfile_mac(env):
 def publish_all_libs_to_staging_windows(env, app_suffix):
     ENV_VAR_VAL_PORTAUDIO = str(env['PORTAUDIO'])
     dependency_libsndfile = ENV_VAR_VAL_PORTAUDIO + '/lib/libsndfile-1.dll'
-
     dependency_port_audio_name = 'portaudio_x86.dll'
     dependency_port_audio = ENV_VAR_VAL_PORTAUDIO + '/lib/' + dependency_port_audio_name
 
     results = env.Install(_get_outer_app_folder(env, app_suffix),
                           dependency_libsndfile)
 
-    results += env.Command(
-         _get_outer_app_folder(env, app_suffix) + '/' + dependency_port_audio_name,
-        dependency_port_audio, SCons.Script.Copy("$TARGET", "$SOURCE"))
+    results += env.Command(_get_outer_app_folder(env, app_suffix) + '/' + dependency_port_audio_name,
+                           dependency_port_audio, SCons.Script.Copy("$TARGET", "$SOURCE"))
 
     return results
 
 def publish_all_libs_to_staging_mac(env, app_suffix):
     ENV_VAR_VAL_PORTAUDIO = str(env['PORTAUDIO'])
-    dependency_libsndfile = ENV_VAR_VAL_PORTAUDIO + os.path.sep + 'lib/*.dylib'
+    dependency_libsndfile = glob.glob(ENV_VAR_VAL_PORTAUDIO + os.path.sep + 'lib/*.dylib')
     dependency_port_audio_name = 'libportaudio.2.dylib'
     dependency_port_audio = ENV_VAR_VAL_PORTAUDIO + os.path.sep + 'lib/libportaudio.2.dylib'
 
