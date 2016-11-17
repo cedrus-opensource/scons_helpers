@@ -102,9 +102,9 @@ class CedrusQtSettingsMac:
         qt_plugins = env.Glob( env['QT_DIR'] + '/platforms/*.dylib' )
 
         for lib in qt_plugins:
-            results += env.Install( env['APP_BUNDLE_NAME'] + '.app/Contents/PlugIns/platforms/', lib )
+            results += env.Install( env.subst('$STAGING_DIR/') + env['APP_BUNDLE_NAME'] + '.app/Contents/PlugIns/platforms/', lib )
 
-        qt_conf = env.Install( env['APP_BUNDLE_NAME'] + '.app/Contents/Resources/', env.Glob( env['QT_DIR'] + '/qt.conf' ) )
+        qt_conf = env.Install( env.subst('$STAGING_DIR/') + env['APP_BUNDLE_NAME'] + '.app/Contents/Resources/', env.Glob( env['QT_DIR'] + '/qt.conf' ) )
         results += qt_conf
 
         return results
