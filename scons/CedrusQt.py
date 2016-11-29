@@ -1,7 +1,6 @@
 import os
 from SCons.Script import *
 import platform
-import CedrusSConsSuperLabHelperFunctions
 
 class CedrusQtSettings:
     def __init__(self, env):
@@ -151,7 +150,6 @@ class CedrusQtSettingsWin32:
         pass # we seem to not need the _copy_plugin_but_no_linker. publish_all_libs_to_staging is good enough on win32
 
     def need_qt_basics(self,env):
-        self._add_base_plugins(env)
         self.add_library(env, 'Qt5Widgets')
         self.add_library(env, 'Qt5Gui')
         self.add_library(env, 'Qt5Core')
