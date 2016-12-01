@@ -33,7 +33,7 @@ class CedrusBoostSettings:
         self.env.SetDefault(STAGED_BOOST_LIBS = [])
         staged_libs = self.env['STAGED_BOOST_LIBS']
 
-        boost_libs = self.env.Glob( self.env['BOOST_DIR'] + '/lib/*' + self.env['BOOST_VERSION'] + lib_extension )
+        boost_libs = self.env.Glob( self.env['BOOST_DIR'] + '/lib/*' + self.impl.publish_match_str + '*' + self.env['BOOST_VERSION'] + lib_extension )
 
         results = []
 
@@ -104,6 +104,8 @@ class CedrusBoostSettingsMac:
             # It would be a burden to edit all source files now. Hindsight...
             env.AppendUnique( CPPDEFINES = [ 'BOOST_PREPROC_FLAG=1490' ] )
 
+        self.publish_match_str = ''
+
     def add_library(self, env, library):
         env.AppendUnique( LIBS = [library] )
 
@@ -151,6 +153,8 @@ class CedrusBoostSettingsWindows:
         self.vc_ver = 'vc140' if env['MSVC_VERSION'] == '14.0' else 'vc100' 
 
         self.build_tag = '-mt-gd-' if env['BUILD_TYPE'] == 'dbg' else '-mt-'
+
+        self.publish_match_str = "%s%s" % (self.vc_ver, self.build_tag)
 
     def add_library(self, env, library):
         env.AppendUnique( LIBS = [library] )
@@ -200,6 +204,8 @@ class CedrusBoostSettingsLinux:
         lib_path = [ ]
 
         env.AppendUnique( CXXFLAGS = cxxflags, LIBPATH = lib_path, )
+
+        self.publish_match_str = ''
 
     def need_boost_system(self, env):
         libname = 'boost_system'            #-gcc43-mt-'+env['BOOST_VERSION']  # see note about lucid/saucy above
