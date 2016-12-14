@@ -33,7 +33,7 @@ class CedrusBoostSettings:
         self.env.SetDefault(STAGED_BOOST_LIBS = [])
         staged_libs = self.env['STAGED_BOOST_LIBS']
 
-        boost_libs = self.env.Glob( self.env['BOOST_DIR'] + '/lib/*' + self.impl.publish_match_str + '*' + self.env['BOOST_VERSION'] + lib_extension )
+        boost_libs = self.env.Glob( self.env['BOOST_DIR'] + '/lib/*' + self.impl.publish_match_str + self.env['BOOST_VERSION'] + lib_extension )
 
         results = []
 
