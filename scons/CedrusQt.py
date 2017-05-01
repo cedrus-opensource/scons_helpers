@@ -153,6 +153,8 @@ class CedrusQtSettingsWin32:
         self.add_library(env, 'Qt5Widgets')
         self.add_library(env, 'Qt5Gui')
         self.add_library(env, 'Qt5Core')
+        self.add_library(env, 'libEGL')
+        self.add_library(env, 'libGLESv2')
 
     def need_qt_opengl(self,env):
         self.add_library(env, 'Qt5OpenGL')
