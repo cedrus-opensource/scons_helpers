@@ -112,18 +112,10 @@ class CedrusQtSettingsWin32:
     def _use_qt_include_paths(self, env):
 
         cxxflags = [
-            '/I' + env['QT_DIR'] + '/win32/include/',
-            '/I' + env['QT_DIR'] + '/win32/include/QtANGLE/', # this replaces QtOpenGL on windows
-            '/I' + env['QT_DIR'] + '/win32/include/QtCore/',
-            '/I' + env['QT_DIR'] + '/win32/include/QtGui/',
-            #'/I' + env['QT_DIR'] + '/win32/include/QtOpenGL/',  # no! we use QtANGLE instead, at least for now
-            '/I' + env['QT_DIR'] + '/win32/include/QtPlatformSupport/',
-            '/I' + env['QT_DIR'] + '/win32/include/QtPrintSupport/',
-            '/I' + env['QT_DIR'] + '/win32/include/QtSensors/',
-            '/I' + env['QT_DIR'] + '/win32/include/QtSvg/',
-            '/I' + env['QT_DIR'] + '/win32/include/QtTest/',
-            '/I' + env['QT_DIR'] + '/win32/include/QtWidgets/',
-            '/I' + env['QT_DIR'] + '/win32/include/QtXml/',
+            '/I' + env['QT_DIR'] + '/include/',
+            '/I' + env['QT_DIR'] + '/include/QtCore/',
+            '/I' + env['QT_DIR'] + '/include/QtGui/',
+            '/I' + env['QT_DIR'] + '/include/QtWidgets/',
             ]
 
         lib_path = [ env['QT_DIR'] + '/win32/final-lib/' ]
@@ -174,10 +166,14 @@ class CedrusQtSettingsWin32:
         for lib in qt_libs:
             results += env.Install( '$STAGING_DIR', lib )
 
-        qt_plugins = env.Glob( env['QT_DIR'] + '/platforms/' + wild_card )
+        qt_plugins_platforms = env.Glob( env['QT_DIR'] + '/plugins/platforms/' + wild_card )
+        qt_plugins_imgformats = env.Glob( env['QT_DIR'] + '/plugins/imageformats/' + wild_card )
 
-        for lib in qt_plugins:
+        for lib in qt_plugins_platforms:
             results += env.Install( '$STAGING_DIR' + '/platforms/', lib )
+
+        for lib in qt_plugins_imgformats:
+            results += env.Install( '$STAGING_DIR' + '/imageformats/', lib )
 
         qt_conf = env.Install( '$STAGING_DIR', env.Glob( env['QT_DIR'] + '/qt.conf' ) )
         results += qt_conf
