@@ -98,10 +98,14 @@ class CedrusQtSettingsMac:
                 results += env.Install( '$STAGING_DIR', lib )
                 env.AppendUnique(STAGED_QT_LIBS = lib.name)
 
-        qt_plugins = env.Glob( env['QT_DIR'] + '/platforms/*.dylib' )
+        qt_plugins_platforms = env.Glob( env['QT_DIR'] + '/plugins/platforms/*.dylib' )
+        qt_plugins_imgformats = env.Glob( env['QT_DIR'] + '/plugins/imageformats/*.dylib')
 
-        for lib in qt_plugins:
+        for lib in qt_plugins_platforms:
             results += env.Install( env.subst('$STAGING_DIR/') + env['APP_BUNDLE_NAME'] + '.app/Contents/PlugIns/platforms/', lib )
+
+        for lib in qt_plugins_imgformats:
+            results += env.Install( env.subst('$STAGING_DIR/') + env['APP_BUNDLE_NAME'] + '.app/Contents/PlugIns/imageformats/', lib )
 
         qt_conf = env.Install( env.subst('$STAGING_DIR/') + env['APP_BUNDLE_NAME'] + '.app/Contents/Resources/', env.Glob( env['QT_DIR'] + '/qt.conf' ) )
         results += qt_conf
