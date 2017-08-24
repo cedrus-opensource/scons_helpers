@@ -58,6 +58,9 @@ class CedrusWxWidgetsSettings:
     def need_xrc(self):
         self.impl.need_xrc(self.env)
 
+    def need_media(self):
+        self.impl.need_media(self.env)
+
 class CedrusWxWidgetsMac:
 
     def __init__(self, env, debug, wx_ver):
@@ -278,6 +281,12 @@ class CedrusWxWidgetsWindows:
 
     def need_xrc(self, env):
         build_tag = 'ud_xrc' if self.debug else 'u_xrc'
+        libname = 'wxmsw' + self.wx_ver_no_dots + build_tag
+
+        env.AppendUnique(LIBS=[libname])
+
+    def need_media(self, env):
+        build_tag = 'ud_media' if self.debug else 'u_media'
         libname = 'wxmsw' + self.wx_ver_no_dots + build_tag
 
         env.AppendUnique(LIBS=[libname])

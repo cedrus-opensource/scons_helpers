@@ -120,6 +120,8 @@ class CedrusQtSettingsWin32:
             '/I' + env['QT_DIR'] + '/include/QtCore/',
             '/I' + env['QT_DIR'] + '/include/QtGui/',
             '/I' + env['QT_DIR'] + '/include/QtWidgets/',
+			'/I' + env['QT_DIR'] + '/include/QtMultimedia/',
+			'/I' + env['QT_DIR'] + '/include/QtMultimediaWidgets/',
             ]
 
         lib_path = [ env['QT_DIR'] + '/win32/final-lib/' ]
@@ -149,6 +151,8 @@ class CedrusQtSettingsWin32:
         self.add_library(env, 'Qt5Widgets')
         self.add_library(env, 'Qt5Gui')
         self.add_library(env, 'Qt5Core')
+        self.add_library(env, 'QtMultimediaWidgets')
+        self.add_library(env, 'QtMultimedia')
         self.add_library(env, 'libEGL')
         self.add_library(env, 'libGLESv2')
 
@@ -172,12 +176,20 @@ class CedrusQtSettingsWin32:
 
         qt_plugins_platforms = env.Glob( env['QT_DIR'] + '/plugins/platforms/' + wild_card )
         qt_plugins_imgformats = env.Glob( env['QT_DIR'] + '/plugins/imageformats/' + wild_card )
+        qt_plugins_audio = env.Glob( env['QT_DIR'] + '/plugins/audio/' + wild_card )
+        qt_plugins_mediaservice = env.Glob( env['QT_DIR'] + '/plugins/mediaservice/' + wild_card )
 
         for lib in qt_plugins_platforms:
             results += env.Install( '$STAGING_DIR' + '/platforms/', lib )
 
         for lib in qt_plugins_imgformats:
             results += env.Install( '$STAGING_DIR' + '/imageformats/', lib )
+
+        for lib in qt_plugins_audio:
+            results += env.Install( '$STAGING_DIR' + '/audio/', lib )
+
+        for lib in qt_plugins_mediaservice:
+            results += env.Install( '$STAGING_DIR' + '/mediaservice/', lib )
 
         qt_conf = env.Install( '$STAGING_DIR', env.Glob( env['QT_DIR'] + '/qt.conf' ) )
         results += qt_conf
