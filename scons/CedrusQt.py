@@ -51,7 +51,11 @@ class CedrusQtSettingsMac:
             '-isystem' + env['QT_DIR'] + '/include/',
             '-isystem' + env['QT_DIR'] + '/include/QtCore/',
             '-isystem' + env['QT_DIR'] + '/include/QtGui/',
-            '-isystem' + env['QT_DIR'] + '/include/QtWidgets/'
+            '-isystem' + env['QT_DIR'] + '/include/QtWidgets/',
+            '-isystem' + env['QT_DIR'] + '/include/QtMultimedia/',
+            '-isystem' + env['QT_DIR'] + '/include/QtMultimediaWidgets/'
+
+
             ]
 
         lib_path = [  env['QT_DIR']+'/lib' ]
@@ -73,6 +77,9 @@ class CedrusQtSettingsMac:
         self.add_library(env, 'Qt5Core')
         self.add_library(env, 'Qt5PrintSupport')
         self.add_library(env, 'Qt5DBus')
+        self.add_library(env, 'Qt5Multimedia')
+        self.add_library(env, 'Qt5MultimediaWidgets')
+        self.add_library(env, 'Qt5OpenGL')
 
     def need_qt_opengl(self,env):
         self.add_library(env, 'Qt5OpenGL')
@@ -100,12 +107,19 @@ class CedrusQtSettingsMac:
 
         qt_plugins_platforms = env.Glob( env['QT_DIR'] + '/plugins/platforms/*.dylib' )
         qt_plugins_imgformats = env.Glob( env['QT_DIR'] + '/plugins/imageformats/*.dylib')
-
+        qt_plugins_audio = env.Glob( env['QT_DIR'] + '/plugins/audio/*.dylib' )
+        qt_plugins_mediaservice = env.Glob( env['QT_DIR'] + '/plugins/mediaservice/*.dylib' )
         for lib in qt_plugins_platforms:
             results += env.Install( env.subst('$STAGING_DIR/') + env['APP_BUNDLE_NAME'] + '.app/Contents/PlugIns/platforms/', lib )
 
         for lib in qt_plugins_imgformats:
             results += env.Install( env.subst('$STAGING_DIR/') + env['APP_BUNDLE_NAME'] + '.app/Contents/PlugIns/imageformats/', lib )
+
+        for lib in qt_plugins_audio:
+            results += env.Install( env.subst('$STAGING_DIR/') + env['APP_BUNDLE_NAME'] + '.app/Contents/PlugIns/audio/', lib )
+
+        for lib in qt_plugins_mediaservice:
+            results += env.Install( env.subst('$STAGING_DIR/') + env['APP_BUNDLE_NAME'] + '.app/Contents/PlugIns/mediaservice/', lib )
 
         qt_conf = env.Install( env.subst('$STAGING_DIR/') + env['APP_BUNDLE_NAME'] + '.app/Contents/Resources/', env.Glob( env['QT_DIR'] + '/qt.conf' ) )
         results += qt_conf
@@ -151,8 +165,8 @@ class CedrusQtSettingsWin32:
         self.add_library(env, 'Qt5Widgets')
         self.add_library(env, 'Qt5Gui')
         self.add_library(env, 'Qt5Core')
-        self.add_library(env, 'QtMultimediaWidgets')
         self.add_library(env, 'QtMultimedia')
+        self.add_library(env, 'QtMultimediaWidgets')
         self.add_library(env, 'libEGL')
         self.add_library(env, 'libGLESv2')
 
