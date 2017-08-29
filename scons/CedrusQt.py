@@ -80,6 +80,7 @@ class CedrusQtSettingsMac:
         self.add_library(env, 'Qt5Multimedia')
         self.add_library(env, 'Qt5MultimediaWidgets')
         self.add_library(env, 'Qt5OpenGL')
+        self.add_library(env, 'Qt5Network')
 
     def need_qt_opengl(self,env):
         self.add_library(env, 'Qt5OpenGL')
