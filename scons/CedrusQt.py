@@ -52,10 +52,6 @@ class CedrusQtSettingsMac:
             '-isystem' + env['QT_DIR'] + '/include/QtCore/',
             '-isystem' + env['QT_DIR'] + '/include/QtGui/',
             '-isystem' + env['QT_DIR'] + '/include/QtWidgets/',
-            '-isystem' + env['QT_DIR'] + '/include/QtMultimedia/',
-            '-isystem' + env['QT_DIR'] + '/include/QtMultimediaWidgets/'
-
-
             ]
 
         lib_path = [  env['QT_DIR']+'/lib' ]
@@ -135,8 +131,6 @@ class CedrusQtSettingsWin32:
             '/I' + env['QT_DIR'] + '/include/QtCore/',
             '/I' + env['QT_DIR'] + '/include/QtGui/',
             '/I' + env['QT_DIR'] + '/include/QtWidgets/',
-			'/I' + env['QT_DIR'] + '/include/QtMultimedia/',
-			'/I' + env['QT_DIR'] + '/include/QtMultimediaWidgets/',
             ]
 
         lib_path = [ env['QT_DIR'] + '/win32/final-lib/' ]
@@ -166,10 +160,6 @@ class CedrusQtSettingsWin32:
         self.add_library(env, 'Qt5Widgets')
         self.add_library(env, 'Qt5Gui')
         self.add_library(env, 'Qt5Core')
-        self.add_library(env, 'QtMultimedia')
-        self.add_library(env, 'QtMultimediaWidgets')
-        self.add_library(env, 'libEGL')
-        self.add_library(env, 'libGLESv2')
 
     def need_qt_opengl(self,env):
         self.add_library(env, 'Qt5OpenGL')
