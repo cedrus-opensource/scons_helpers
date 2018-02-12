@@ -25,8 +25,12 @@ def publish_all_libs_to_staging(env):
 
 def need_openssl_mac(env):
     lib_dependencies = [ 'ssl', 'crypto' ]
+    include_path = [ '-I/usr/local/opt/openssl/include' ]
+    libpath = [ '/usr/local/opt/openssl/lib' ]
 
-    env.AppendUnique( LIBS = lib_dependencies )
+    env.AppendUnique( CXXFLAGS = include_path,
+                LIBPATH = libpath,
+                LIBS = lib_dependencies, )
 
 def publish_all_libs_to_staging_win(env):
     # publish openssl libraries

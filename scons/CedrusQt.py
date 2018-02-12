@@ -71,12 +71,6 @@ class CedrusQtSettingsMac:
         self.add_library(env, 'Qt5Widgets')
         self.add_library(env, 'Qt5Gui')
         self.add_library(env, 'Qt5Core')
-        self.add_library(env, 'Qt5PrintSupport')
-        self.add_library(env, 'Qt5DBus')
-        self.add_library(env, 'Qt5Multimedia')
-        self.add_library(env, 'Qt5MultimediaWidgets')
-        self.add_library(env, 'Qt5OpenGL')
-        self.add_library(env, 'Qt5Network')
 
     def need_qt_opengl(self,env):
         self.add_library(env, 'Qt5OpenGL')
@@ -96,6 +90,15 @@ class CedrusQtSettingsMac:
         qt_libs = env.Glob( env['QT_DIR'] + '/lib/*.dylib' )
 
         results = []
+        qt_extra_mac_essentials = ['Qt5PrintSupport', 'Qt5DBus', 'Qt5OpenGL', 'Qt5Network']
+
+        for lib in qt_extra_mac_essentials:
+            actual_lib_file = env.Glob(env['QT_DIR'] + '/lib/' + '*' + lib + '*.dylib')
+            if actual_lib_file[0].name not in staged_libs:
+                results += env.Install('$STAGING_DIR/', actual_lib_file[0])
+                env.AppendUnique(STAGED_QT_LIBS = actual_lib_file[0].name)
+
+        staged_libs = env['STAGED_QT_LIBS']
 
         for lib in qt_libs:
             if ( False == os.path.islink( str(lib) ) ) and ( lib.name not in staged_libs ):
