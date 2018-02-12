@@ -96,6 +96,7 @@ class CedrusQtSettingsMac:
             actual_lib_file = env.Glob(env['QT_DIR'] + '/lib/' + '*' + lib + '*.dylib')
             if actual_lib_file[0].name not in staged_libs:
                 results += env.Install('$STAGING_DIR/', actual_lib_file[0])
+                results += env.Install(env.subst('$STAGING_DIR/') + env['APP_BUNDLE_NAME'] + '.app/Contents/MacOS/', actual_lib_file[0])
                 env.AppendUnique(STAGED_QT_LIBS = actual_lib_file[0].name)
 
         staged_libs = env['STAGED_QT_LIBS']
