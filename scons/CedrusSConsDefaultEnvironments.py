@@ -38,10 +38,10 @@ def _get_mac_global_defaults( env ):
     env.Append( LINKFLAGS = '-Wl -rpath @executable_path/ -rpath @loader_path/' )
 
     # believe it or not, we need flags for 'plain old C' code!  it's for sqlite (written in C), in DataViewer
-    plain_old_c_flags = [ '-isysroot/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk', '-mmacosx-version-min=10.11' ]
+    plain_old_c_flags = [ '-isysroot/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk', '-mmacosx-version-min=10.12' ]
 
     if env['WX_VERSION'] >= '2.9':
-        plain_old_c_flags = [ '-isysroot/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk', '-mmacosx-version-min=10.11' ]
+        plain_old_c_flags = [ '-isysroot/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk', '-mmacosx-version-min=10.12' ]
 
     env.AppendUnique(
         CPPPATH = mac.getCommonInclude(),

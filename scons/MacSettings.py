@@ -79,7 +79,7 @@ class MacSettings:
                 return [
                     '-F$OBJ_ROOT',
                     '-isysroot/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk',
-                    '-mmacosx-version-min=10.11',
+                    '-mmacosx-version-min=10.12',
                     '-stdlib=libc++',
                 ]
 
@@ -107,7 +107,7 @@ class MacSettings:
                 '-fvisibility-ms-compat',
                 '-fvisibility-inlines-hidden',
                 '-isysroot/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk',
-                '-mmacosx-version-min=10.11',
+                '-mmacosx-version-min=10.12',
                 '-fstrict-aliasing',
                 '-std=c++11',
                 '-stdlib=libc++',
