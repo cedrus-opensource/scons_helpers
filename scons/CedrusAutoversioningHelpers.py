@@ -18,11 +18,15 @@ def get_git_version():
 
     return git_version
 
-def run_autoversioning(path,outfile,input_file):
+def run_autoversioning(env,path,outfile,input_file):
     sock = open(input_file,"r")
     current_version = sock.readline().rstrip(' \n')
     gui_label_version = sock.readline().rstrip(' \n')
     sock.close()
+
+    superlab_edition = 'C'
+    if env.GetOption( 'dlx_omission_flag' ) != True:
+        superlab_edition = 'X'
 
     git_version = get_git_version()
 
@@ -36,7 +40,8 @@ def run_autoversioning(path,outfile,input_file):
 #define APPLICATION_SHORT_VERSION_STRING "%s"
 #define APPLICATION_GUI_LABELS_APP_NAME "%s"
 #define APPLICATION_CURRENT_YEAR "%s"
-""" % ( text_version, current_version, gui_label_version, copyright_and_year )
+#define APPLICATION_SUPERLAB_EDITION '%s'
+""" % ( text_version, current_version, gui_label_version, copyright_and_year, superlab_edition )
 
 #   print( output )
 
