@@ -22,6 +22,7 @@ def run_autoversioning(env,path,outfile,input_file):
     sock = open(input_file,"r")
     current_version = sock.readline().rstrip(' \n')
     gui_label_version = sock.readline().rstrip(' \n')
+    plain_version = sock.readline().rstrip(' \n')
     sock.close()
 
     superlab_edition = 'C'
@@ -41,7 +42,8 @@ def run_autoversioning(env,path,outfile,input_file):
 #define APPLICATION_GUI_LABELS_APP_NAME "%s"
 #define APPLICATION_CURRENT_YEAR "%s"
 #define APPLICATION_SUPERLAB_EDITION '%s'
-""" % ( text_version, current_version, gui_label_version, copyright_and_year, superlab_edition )
+#define APPLICATION_PLAIN_VERSION_STRING "%s"
+""" % ( text_version, current_version, gui_label_version, copyright_and_year, superlab_edition, plain_version )
 
 #   print( output )
 
