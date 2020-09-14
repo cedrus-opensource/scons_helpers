@@ -28,7 +28,7 @@ def FromSwtoolkitFilterOut(env, **kw):
     """
 
     kw = SCons.Environment.copy_non_reserved_keywords(kw)
-    for key, val in kw.items():
+    for key, val in list(kw.items()):
         envval = env.get(key, None)
 
         # Note from Kelly: I cannot figure out why, but envval ended
@@ -75,9 +75,9 @@ def NowIsDuringBusinessHoursWhenSomeoneCanReactToSomeHungTest():
     result = (is_business_day and during_work_hours)
 
     if result == True:
-        print 'The Cedrus Python SCons helper function determined that this build is running *DURING* business hours.'
+        print ('The Cedrus Python SCons helper function determined that this build is running *DURING* business hours.')
     else:
-        print 'The Cedrus Python SCons helper function found that this build is _NOT_ happening during normal work hours.'
+        print ('The Cedrus Python SCons helper function found that this build is _NOT_ happening during normal work hours.')
 
     return result
 
@@ -367,7 +367,7 @@ def DeclareSConsGUIAppProgramBuild(
             mac_app_bundle_contents_dir + 'Info.plist',
             './' + project_target_name +'-Info.plist',
             [Copy('$TARGET', '$SOURCE'),
-             Chmod('$TARGET', 0644)]
+             Chmod('$TARGET', 0o644)]
             )
 
         for rsrc in app_resources:
@@ -472,7 +472,7 @@ def DeclareSConsComplexGUIAppProgramBuild(
                 app_copyright_and_info_string,
                 app_version_string,
                 app_min_macos_version),
-             Chmod('$TARGET', 0644)]
+             Chmod('$TARGET', 0o644)]
             )
 
         for rsrc in app_resources:
@@ -807,8 +807,8 @@ Description: %s
 
     if sys.platform != 'linux2': # see the comments above about why we run nearly all of this deb code on non-linux platforms, too.
         make_deb_pkg = None
-        print "Not on linux, so we only pretend to specify deb file " + env.subst(debpkg)
-        print "[following command not run due to non-linux os] fakeroot dpkg-deb -b %s %s" % (outer_folder_for_this_deb, debpkg)
+        print("Not on linux, so we only pretend to specify deb file " + env.subst(debpkg))
+        print("[following command not run due to non-linux os] fakeroot dpkg-deb -b %s %s" % (outer_folder_for_this_deb, debpkg))
 
     else:
 

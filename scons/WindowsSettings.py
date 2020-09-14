@@ -8,7 +8,7 @@ class WindowsSettings:
     def getCommonDefines(self):
         return [
             'WIN32',
-            '_WIN32_WINNT=0X501', # 0x500 means we target win 2000 (or later). 0x501 means we target XP (or later)
+            '_WIN32_WINNT=0X601', # 0x501 means we target XP (or later) 0x601 is Win7 or later
             '_UNICODE',
             'BOOST_ALL_DYN_LINK',
             'BOOST_REGEX_DYN_LINK',

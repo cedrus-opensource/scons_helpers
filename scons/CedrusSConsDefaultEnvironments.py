@@ -204,7 +204,7 @@ def _get_linux_release_defaults( env ):
 def GetDefaultSetupForCurrentSystemAndCommandLine( env ):
 
     build_mode = env.GetOption('build_mode')
-    print 'Chosen build mode: ' + str(build_mode)
+    print('Chosen build mode: ' + str(build_mode))
 
     if build_mode == 'dbg':
 
@@ -308,16 +308,16 @@ def PerformCedrusSConsGlobalGeneralStartup( env_settings ):
         help='force a re-run of all tests')
 
     if GetOption('retest_flag'):
-        print 'Force retest == TRUE'
+        print ('Force retest == TRUE')
     else:
-        print 'Force retest == FALSE'
+        print ('Force retest == FALSE')
 
     env = Environment( MSVC_VERSION=env_settings['MSVC_VERSION'] )
 
     if sys.platform == 'win32':
         # according to SCons documentation: you *must* set MSVC_VERSION in the env constructor
 
-        print "Using Visual Studio Version " + env['MSVC_VERSION']
+        print("Using Visual Studio Version " + env['MSVC_VERSION'])
 
         win_setting_for_vs = ''
         if env['MSVC_VERSION'] == '10.0':
@@ -325,11 +325,11 @@ def PerformCedrusSConsGlobalGeneralStartup( env_settings ):
         elif env['MSVC_VERSION'] == '14.0':
             win_setting_for_vs = os.getenv('VS140COMNTOOLS')
         else :
-            print 'Unsupported MSVC_VERSION.'
+            print ('Unsupported MSVC_VERSION.')
             quit()
 
         if str(win_setting_for_vs) == '':
-            print 'Failed to read VS common tools environment variable for MS VC ' + env['MSVC_VERSION']
+            print('Failed to read VS common tools environment variable for MS VC ' + env['MSVC_VERSION'])
             quit()
 
         win_vars_bat_path = str(win_setting_for_vs) + '\\..\\..\\VC\\bin\\vcvars32.bat'
@@ -348,7 +348,7 @@ def PerformCedrusSConsGlobalGeneralStartup( env_settings ):
         env['SHLINKCOM'] = [env['SHLINKCOM'], 'mt.exe -nologo -manifest ${TARGET}.manifest -outputresource:$TARGET;2']
 
     env.SetOption('num_jobs', int(os.getenv('NUM_CPU',4))  )
-    print "Running with -j", env.GetOption('num_jobs')
+    print("Running with -j", env.GetOption('num_jobs'))
 
     #-------------------------------------------------------------------------------------
     #------ BEGIN SECTION:   ** so-called "GoFastButton" **     --------------------------
@@ -449,7 +449,7 @@ def PerformCedrusSConsGlobalGeneralStartup( env_settings ):
         )
 
     if GetOption('retest_flag'):
-        print 'Removing the test output directory to force tests to run again.'
+        print ('Removing the test output directory to force tests to run again.')
         # You can also execute an action *immediately* (meaning at the time
         # the SConscript file is *read*) by using the Execute function. For
         # example, if we need to make sure that a directory exists before we

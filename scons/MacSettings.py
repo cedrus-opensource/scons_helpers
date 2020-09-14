@@ -13,7 +13,7 @@ class MacSettings:
         elif wxVersion == 'NONE':
             self.wxEnvVar = 'NONE'
         else:
-            print "Unsupported wxWidgets version!"
+            print ("Unsupported wxWidgets version!")
             Exit(1)
 
     def getCommonDefines(self):

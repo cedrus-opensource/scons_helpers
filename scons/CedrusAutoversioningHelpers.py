@@ -8,10 +8,10 @@ def get_git_version():
     git_version = "ABCDEFGHIJKLM"
 
     try:
-        git_version = Popen([ 'git', 'rev-list', '-1', 'HEAD' ], stdout=PIPE).communicate()[0].rstrip('\n')
+        git_version = str(Popen([ 'git', 'rev-list', '-1', 'HEAD' ], stdout=PIPE).communicate()[0]).rstrip('\n')
     except:
         for annoy in range(10):
-            print "\n\n\n\n>>>>>>>>>>>>>>>>>>>>>>>>>>> If you are making a shippable RELEASE this is BAD! Otherwise not so much. (failure to retrieve the version control information)"
+            print("\n\n\n\n>>>>>>>>>>>>>>>>>>>>>>>>>>> If you are making a shippable RELEASE this is BAD! Otherwise not so much. (failure to retrieve the version control information)")
             time.sleep(1)
 
     git_version = git_version[:8] # take only the first 8 char of the git commit hash
