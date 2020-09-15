@@ -26,8 +26,11 @@ def run_autoversioning(env,path,outfile,input_file):
     sock.close()
 
     superlab_edition = 'C'
-    if env.GetOption( 'dlx_omission_flag' ) != True:
-        superlab_edition = 'X'
+    try:
+        if env.GetOption( 'dlx_omission_flag' ) != True:
+            superlab_edition = 'X'
+    except:
+        print("ok")
 
     git_version = get_git_version()
 
