@@ -14,7 +14,8 @@ def get_git_version():
             print("\n\n\n\n>>>>>>>>>>>>>>>>>>>>>>>>>>> If you are making a shippable RELEASE this is BAD! Otherwise not so much. (failure to retrieve the version control information)")
             time.sleep(1)
 
-    git_version = git_version[:8] # take only the first 8 char of the git commit hash
+    # We're now taking 8 characters starting at the 3rd one, because the strings start with "b'", presumably because of python3.
+    git_version = git_version[2:10] # take only the first 8 char of the git commit hash
 
     return git_version
 
