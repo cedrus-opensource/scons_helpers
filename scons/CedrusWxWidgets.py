@@ -183,7 +183,7 @@ class CedrusWxWidgetsWindows:
 
         env.AppendUnique(LIBS=[libname])
 
-        self.vc_dir = 'vc_dll_vc14' if env['MSVC_VERSION'] == '14.0' else 'vc_dll_vc10'
+        self.vc_dir = 'vc_dll_vc17' if env['MSVC_VERSION'] == '14.3' else 'vc_dll_vc10'
 
         cxxflags = [
                      '/I' + env['WX_DIR'] + '/lib/' + self.vc_dir + '/mswu/',

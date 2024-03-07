@@ -324,6 +324,8 @@ def PerformCedrusSConsGlobalGeneralStartup( env_settings ):
             win_setting_for_vs = os.getenv('VS100COMNTOOLS')
         elif env['MSVC_VERSION'] == '14.0':
             win_setting_for_vs = os.getenv('VS140COMNTOOLS')
+        elif env['MSVC_VERSION'] == '14.3':
+            win_setting_for_vs = os.getenv('VS143COMNTOOLS')
         else :
             print ('Unsupported MSVC_VERSION.')
             quit()
@@ -332,12 +334,13 @@ def PerformCedrusSConsGlobalGeneralStartup( env_settings ):
             print('Failed to read VS common tools environment variable for MS VC ' + env['MSVC_VERSION'])
             quit()
 
-        win_vars_bat_path = str(win_setting_for_vs) + '\\..\\..\\VC\\bin\\vcvars32.bat'
+        win_vars_bat_path = 'C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Auxiliary\\Build\\vcvars64.bat'
 
         # now it looks like both win7 *and* the vista machine are fixed if we use MSVC_USE_SCRIPT
         env = Environment(
              MSVC_VERSION=env_settings['MSVC_VERSION'],
-             MSVC_USE_SCRIPT=win_vars_bat_path
+             MSVC_USE_SCRIPT=win_vars_bat_path,
+             MSVC_USE_SCRIPT_ARGS=''
             )
 
         env['WINDOWS_INSERT_MANIFEST'] = True

@@ -8,7 +8,7 @@ class WindowsSettings:
     def getCommonDefines(self):
         return [
             'WIN32',
-            '_WIN32_WINNT=0X601', # 0x501 means we target XP (or later) 0x601 is Win7 or later
+            '_WIN32_WINNT=0x0601', # 0x501 means we target XP (or later) 0x601 is Win7 or later
             '_UNICODE',
             'BOOST_ALL_DYN_LINK',
             'BOOST_REGEX_DYN_LINK',
@@ -56,7 +56,7 @@ class WindowsSettings:
 
     def getCommonLinkerFlags(self):
         flags = [
-            '/MACHINE:X86',
+            '/MACHINE:X64',
             '/INCREMENTAL:NO',
         ]
 
@@ -103,7 +103,7 @@ class WindowsSettings:
             '__WXDEBUG__',
         ]
 
-        if self.env['WX_VERSION'] == '2.9':
+        if self.env['WX_VERSION'] == '3.0':
             result += [ 'wxDEBUG_LEVEL=2' ]
 
         return result
@@ -112,7 +112,7 @@ class WindowsSettings:
         result = [
         ]
 
-        if self.env['WX_VERSION'] == '2.9':
+        if self.env['WX_VERSION'] == '3.0':
             result += [ 'wxDEBUG_LEVEL=0' ]
 
         return result

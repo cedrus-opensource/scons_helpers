@@ -38,11 +38,11 @@ def publish_all_libs_to_staging(env, app_suffix):
 def need_pa_w_sndfile_windows(env):
     ENV_VAR_VAL_PORTAUDIO = str(env['PORTAUDIO'])
     env.PrependUnique(
-        LIBS=['portaudio_x86', 'libsndfile-1'],
+        LIBS=['portaudio', 'sndfile'],
         CPPPATH=[ENV_VAR_VAL_PORTAUDIO + '/include'],
         LIBPATH=[ENV_VAR_VAL_PORTAUDIO + '/lib'], )
 
-    dependency_port_audio_name = 'portaudio_x86.dll'
+    dependency_port_audio_name = 'portaudio.dll'
 
 def need_pa_w_sndfile_mac(env):
     ENV_VAR_VAL_PORTAUDIO = str(env['PORTAUDIO'])
@@ -55,12 +55,26 @@ def need_pa_w_sndfile_mac(env):
 
 def publish_all_libs_to_staging_windows(env, app_suffix):
     ENV_VAR_VAL_PORTAUDIO = str(env['PORTAUDIO'])
-    dependency_libsndfile = ENV_VAR_VAL_PORTAUDIO + '/lib/libsndfile-1.dll'
-    dependency_port_audio_name = 'portaudio_x86.dll'
+    dependency_libsndfile = ENV_VAR_VAL_PORTAUDIO + '/lib/sndfile.dll'
+    dependency_port_audio_name = 'portaudio.dll'
     dependency_port_audio = ENV_VAR_VAL_PORTAUDIO + '/lib/' + dependency_port_audio_name
+
+    additional_libs = []
+
+    additional_libs += env.Glob(ENV_VAR_VAL_PORTAUDIO + '/lib/vorbis.dll')
+    additional_libs += env.Glob(ENV_VAR_VAL_PORTAUDIO + '/lib/vorbisenc.dll')
+    additional_libs += env.Glob(ENV_VAR_VAL_PORTAUDIO + '/lib/FLAC.dll')
+    additional_libs += env.Glob(ENV_VAR_VAL_PORTAUDIO + '/lib/mpg123.dll')
+    additional_libs += env.Glob(ENV_VAR_VAL_PORTAUDIO + '/lib/opus.dll')
+    additional_libs += env.Glob(ENV_VAR_VAL_PORTAUDIO + '/lib/ogg.dll')
+    additional_libs += env.Glob(ENV_VAR_VAL_PORTAUDIO + '/lib/libmp3lame.dll')
 
     results = env.Install(_get_outer_app_folder(env, app_suffix),
                           dependency_libsndfile)
+
+    for lib in additional_libs:
+        results += env.Install(_get_outer_app_folder(env, app_suffix),
+                          lib)
 
     results += env.Command(_get_outer_app_folder(env, app_suffix) + '/' + dependency_port_audio_name,
                            dependency_port_audio, SCons.Script.Copy("$TARGET", "$SOURCE"))

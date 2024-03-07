@@ -150,9 +150,9 @@ class CedrusBoostSettingsWindows:
 
         env.AppendUnique( CXXFLAGS = include_path, LIBPATH = lib_path )
 
-        self.vc_ver = 'vc140' if env['MSVC_VERSION'] == '14.0' else 'vc100' 
+        self.vc_ver = 'vc143' if env['MSVC_VERSION'] == '14.3' else 'vc100'
 
-        self.build_tag = '-mt-gd-' if env['BUILD_TYPE'] == 'dbg' else '-mt-'
+        self.build_tag = '-mt-gd-x64-' if env['BUILD_TYPE'] == 'dbg' else '-mt-x64-'
 
         self.publish_match_str = "%s%s" % (self.vc_ver, self.build_tag)
 
